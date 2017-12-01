@@ -3,7 +3,7 @@ import java.util.*;
 
 ControlP5 cp5;
 ControlWindow controlWindow;
-Canvas gc, wc, ec;
+Canvas gc, wc, ec, sc, gwc;
 
 int marginx = 30;
 int marginy = 45;
@@ -11,26 +11,35 @@ int marginy = 45;
 void initControls() {
   cp5 = new ControlP5(this);
   
+  // Canvas
   gc = new GrainCanvas();
   gc.pre(); // use cc.post(); to draw on top of existing controllers.
   cp5.addCanvas(gc); 
   
+  // Editors
+  initListWindow();
+  initEditWindow();
+}
+
+void initListWindow() {
   Group grainListGroup = cp5.addGroup("grainListGroup")
                             .setPosition(width - (width * 0.35), marginy)
                             .setTitle("Grains List")
                             .setWidth(int(width*0.1 - marginx))
                             .setBackgroundHeight(height - 2*marginy)
                             .setBackgroundColor(color(255,50));              
-  cp5.addBang("A-1")
-     .setPosition(10,20)
-     .setSize(80,20)
+  grainListGroup.disableCollapse();
+
+  cp5.addScrollableList("grains_dropdown")
+     .setPosition(10, 10)
+     .setSize(int(width*0.1 - marginx)-20, height - 2*marginy - 20)
+     .setBarHeight(20)
+     .setItemHeight(20)
+     .setType(ControlP5.LIST)
      .setGroup(grainListGroup);
-          
-  cp5.addBang("A-2")
-     .setPosition(10,60)
-     .setSize(80,20)
-     .setGroup(grainListGroup);
-  
+}
+
+void initEditWindow() {
   Group grainEditGroup = cp5.addGroup("grainEditGroup")
                             .setPosition(width - (width * 0.25), marginy)
                             .setTitle("Create and edit grains")
@@ -41,16 +50,6 @@ void initControls() {
   //   .setPosition(10,10)
   //   .setSize(int(width*0.19), 25)
   //   .setFocus(false)
-  //   .setGroup(grainEditGroup);
-  
-  //cp5.addBang("A-3")
-  //   .setPosition(10,50)
-  //   .setSize(int(width*0.19),20)
-  //   .setGroup(grainEditGroup);
-          
-  //cp5.addBang("A-4")
-  //   .setPosition(10,90)
-  //   .setSize(int(width*0.19),20)
   //   .setGroup(grainEditGroup);
   
   String[] filenames = listFileNames(sketchPath()+"/samples");
@@ -67,11 +66,75 @@ void initControls() {
   wc.pre(); // use cc.post(); to draw on top of existing controllers.
   cp5.addCanvas(wc); 
   
+  // TODO: Put buttons for common envelopes (hamming, hanning)
   ec = new EnvelopeCanvas();
   ec.pre(); // use cc.post(); to draw on top of existing controllers.
   cp5.addCanvas(ec); 
   
+  gwc = new GrainWaveformCanvas();
+  gwc.pre(); // use cc.post(); to draw on top of existing controllers.
+  cp5.addCanvas(gwc); 
+  
+  
+  sc = new GrainSaveCanvas();
+  sc.pre(); // use cc.post(); to draw on top of existing controllers.
+  cp5.addCanvas(sc); 
 }
+
+
+class GrainSaveCanvas extends Canvas {
+  public float x, y;
+  public float w, h;
+  
+  private float animTime = 1000;
+  
+  private float prevTime = millis();
+  private float timeElapsed = 0;
+  
+  int mx, my;
+  public void setup(PGraphics pg) {
+    h = 50;
+    y = height-marginy-10-h;
+  }  
+
+  public void update(PApplet p) {
+    x = p.width * 0.75 + 10;
+    w = p.width*0.19;
+    
+    mx = p.mouseX;
+    my = p.mouseY;
+    
+    if(timeElapsed < animTime && p.keyPressed && p.key == 's'){
+      timeElapsed += (millis() - prevTime);
+    }
+    
+    if(timeElapsed > animTime)
+    {
+      timeElapsed = 0;
+      saveGrain(w, x);
+    }
+    if(timeElapsed < 0)
+      timeElapsed = 0;
+    
+    if(!p.keyPressed || p.key != 's')
+      timeElapsed -= timeElapsed/10;
+    prevTime = millis();
+  }
+
+  public void draw(PGraphics pg) {
+    pg.fill(27);
+    pg.rect(x, y, w, h);
+    
+    pg.fill(timeElapsed > animTime ? 255 : map(timeElapsed, 0, animTime, 27, 200));
+    pg.rect(x, y, map(timeElapsed, 0, animTime, 0, w), h);
+    
+    pg.textAlign(CENTER,CENTER);
+    pg.textSize(16);
+    pg.fill(map(timeElapsed, 0, animTime, 255, -100));
+    pg.text("Press and Hold 'S' button", x+w*0.5, y+h*0.5);
+  }
+}
+
 
 String[] listFileNames(String dir) {
   File file = new File(dir);

@@ -1,5 +1,6 @@
 boolean redraw = true;
 
+
 class WaveformCanvas extends Canvas {
   public float x, y;
   public float w, h;
@@ -8,8 +9,6 @@ class WaveformCanvas extends Canvas {
   boolean mPress;
   int mButton;
   char kKey;
-  
-  float[] selection = {-1, -1};
   
   PGraphics wave;
   
@@ -20,7 +19,7 @@ class WaveformCanvas extends Canvas {
   }  
 
   public void update(PApplet p) {
-    x = p.width - (p.width*0.25) + 10;
+    x = p.width * 0.75 + 10;
     
     w = int(p.width*0.19);
     h = 150;
@@ -57,6 +56,9 @@ class WaveformCanvas extends Canvas {
       else if(mPress && mButton==RIGHT && filePlayer != null) {
         selection[1] = mx;
         
+        isDrawGrainWave = true;
+        
+        // limit to 1/fps seconds chops
         float pos1 = map(selection[0], x, x+w, 0, file.length());
         float pos2 = map(selection[1], x, x+w, 0, file.length());
         if(abs(pos2-pos1) > file.sampleRate()/frameRate) {

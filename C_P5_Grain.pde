@@ -18,8 +18,6 @@ class GrainCanvas extends Canvas {
   }
 
   public void draw(PGraphics pg) {
-    // renders a square with randomly changing colors
-    // make changes here.
     pg.fill(27);
     pg.rect(x, y, w, h);
   }

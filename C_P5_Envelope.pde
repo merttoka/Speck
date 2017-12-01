@@ -1,5 +1,7 @@
 float[] envelope_values = new float[32];
 
+// TODO: Curve Drawing rather than arrays
+
 class EnvelopeCanvas extends Canvas {
   public float x, y;
   public float w, h;
@@ -28,8 +30,6 @@ class EnvelopeCanvas extends Canvas {
   }
 
   public void draw(PGraphics pg) {
-    // renders a square with randomly changing colors
-    // make changes here.
     pg.noStroke();
     pg.fill(0);
     pg.rect(x, y, w, h);
@@ -37,6 +37,7 @@ class EnvelopeCanvas extends Canvas {
     if (mx >= x && mx < x+w && my >= y && my < y+h){
       if(mPress && mButton == LEFT) {
         envelope_values[(int)map(mx, x, x+w, 0, envelope_values.length)] = map(my, y, y+h, 1, 0);
+        isDrawGrainWave = true;
       }
     }
     
