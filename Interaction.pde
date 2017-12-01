@@ -45,7 +45,10 @@ void samples_dropdown(int n) {
  
   file = minim.loadSample("samples/"+selectedSample, 1024);
   
+  updateSampleDuration();
+  
   redraw = true;
+  isDrawGrainWave = true;
 }
 
 void mouseClicked() {

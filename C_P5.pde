@@ -61,21 +61,34 @@ void initEditWindow() {
      .addItems(Arrays.asList(filenames))
      .setType(ControlP5.LIST)
      .setGroup(grainEditGroup);
-     
+  
+  // Sample Player
   wc = new WaveformCanvas();
   wc.pre(); // use cc.post(); to draw on top of existing controllers.
   cp5.addCanvas(wc); 
   
+  cp5.addTextlabel("sampledurationlabel")
+    .setText("Sample Length: 0 ms")
+    .setPosition(10,200+150+30)
+    .setGroup(grainEditGroup);
+    
+  cp5.addTextlabel("graindurationlabel")
+    .setText("Selection Length: 0 ms")
+    .setPosition(10,200+150+50)
+    .setGroup(grainEditGroup);
+
   // TODO: Put buttons for common envelopes (hamming, hanning)
   ec = new EnvelopeCanvas();
   ec.pre(); // use cc.post(); to draw on top of existing controllers.
   cp5.addCanvas(ec); 
   
+  // Waveshape of the grain
   gwc = new GrainWaveformCanvas();
   gwc.pre(); // use cc.post(); to draw on top of existing controllers.
   cp5.addCanvas(gwc); 
   
   
+  // Save grain button
   sc = new GrainSaveCanvas();
   sc.pre(); // use cc.post(); to draw on top of existing controllers.
   cp5.addCanvas(sc); 

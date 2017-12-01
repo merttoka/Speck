@@ -17,6 +17,9 @@ void initAudio () {
   filePlayer.pause();
   
   file = minim.loadSample("samples/0.aif", 1024);
+  
+  sampleDuration = file.getChannel(AudioSample.LEFT).length/file.sampleRate();
+  cp5.get(Textlabel.class, "sampledurationlabel").setText("Sample Length: " + nfc(sampleDuration*1000, 2) + " ms");
 }
 
 class Grain {

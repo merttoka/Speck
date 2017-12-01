@@ -12,6 +12,11 @@ class EnvelopeCanvas extends Canvas {
   char kKey;
   
   public void setup(PGraphics pg) {
+    // Default is Hann
+    for(int i = 0; i < envelope_values.length; i++) {
+      envelope_values[i] = 0.5 * (1 - cos(TWO_PI*i/(envelope_values.length - 1)));
+    }
+    
     y = 220+2*marginy+200;
   }  
 

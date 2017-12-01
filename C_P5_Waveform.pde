@@ -52,6 +52,7 @@ class WaveformCanvas extends Canvas {
         selection[0] = mx;
         selection[1] = -1;
         filePlayer.cue((int)pos);
+        updateGrainDuration(x, x+w);
       }
       else if(mPress && mButton==RIGHT && filePlayer != null) {
         selection[1] = mx;
@@ -59,11 +60,14 @@ class WaveformCanvas extends Canvas {
         isDrawGrainWave = true;
         
         // limit to 1/fps seconds chops
-        float pos1 = map(selection[0], x, x+w, 0, file.length());
-        float pos2 = map(selection[1], x, x+w, 0, file.length());
+        float pos1 = map(selection[0], x, x+w, 0, filePlayer.length());
+        float pos2 = map(selection[1], x, x+w, 0, filePlayer.length());
         if(abs(pos2-pos1) > file.sampleRate()/frameRate) {
-          selection[1] = map(pos1+file.sampleRate()/frameRate, 0, file.length(), x, x+w);
+          selection[1] = map(pos1+file.sampleRate()/frameRate, 0, filePlayer.length(), x, x+w);
         }
+        
+        // Redraws grain duration
+        updateGrainDuration(x, x+w);
       }
     }
     
