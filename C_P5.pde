@@ -14,7 +14,12 @@ void initControls() {
   // Canvas
   gc = new GrainCanvas();
   gc.pre(); // use cc.post(); to draw on top of existing controllers.
-  cp5.addCanvas(gc); 
+  cp5.addCanvas(gc);
+  
+  printArray(PFont.list());
+  PFont font = createFont("Ubuntu Mono Bold", 11);
+  cp5.setFont(font);
+  textFont(font);
   
   // Editors
   initListWindow();
@@ -29,7 +34,8 @@ void initListWindow() {
                             .setBackgroundHeight(height - 2*marginy)
                             .setBackgroundColor(color(255,50));              
   grainListGroup.disableCollapse();
-
+  grainListGroup.getCaptionLabel().setVisible(false);
+  
   cp5.addScrollableList("grains_dropdown")
      .setPosition(10, 10)
      .setSize(int(width*0.1 - marginx)-20, height - 2*marginy - 20)
@@ -46,12 +52,9 @@ void initEditWindow() {
                             .setWidth(int(width*0.25 - 3*marginx))
                             .setBackgroundHeight(height - 2*marginy)
                             .setBackgroundColor(color(255,50));              
-  //cp5.addTextfield("path")
-  //   .setPosition(10,10)
-  //   .setSize(int(width*0.19), 25)
-  //   .setFocus(false)
-  //   .setGroup(grainEditGroup);
-  
+  grainEditGroup.disableCollapse();
+  grainEditGroup.getCaptionLabel().hide();
+ 
   String[] filenames = listFileNames(sketchPath()+"/samples");
   cp5.addScrollableList("samples_dropdown")
      .setPosition(10, 10)
@@ -67,14 +70,18 @@ void initEditWindow() {
   wc.pre(); // use cc.post(); to draw on top of existing controllers.
   cp5.addCanvas(wc); 
   
-  cp5.addTextlabel("sampledurationlabel")
-    .setText("Sample Length: 0 ms")
+  
+  cp5.addTextlabel("samplenamelabel")
+    .setText("Sample Name: "+selectedSample)
     .setPosition(10,200+150+30)
     .setGroup(grainEditGroup);
-    
+  cp5.addTextlabel("sampledurationlabel")
+    .setText("Sample Length: 0 ms")
+    .setPosition(10,200+150+50)
+    .setGroup(grainEditGroup);
   cp5.addTextlabel("graindurationlabel")
     .setText("Selection Length: 0 ms")
-    .setPosition(10,200+150+50)
+    .setPosition(10,200+150+70)
     .setGroup(grainEditGroup);
 
   // TODO: Put buttons for common envelopes (hamming, hanning)
@@ -99,7 +106,7 @@ class GrainSaveCanvas extends Canvas {
   public float x, y;
   public float w, h;
   
-  private float animTime = 1000;
+  private float animTime = 500;
   
   private float prevTime = millis();
   private float timeElapsed = 0;

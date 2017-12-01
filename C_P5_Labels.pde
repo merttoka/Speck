@@ -1,6 +1,10 @@
 float sampleDuration = 0;
 float grainDuration = 0;
 
+void updateSampleName() {
+  cp5.get(Textlabel.class, "samplenamelabel").setText("Sample Name: " + selectedSample);
+}
+
 void updateSampleDuration() {
   sampleDuration = file.getChannel(AudioSample.LEFT).length/file.sampleRate();
   cp5.get(Textlabel.class, "sampledurationlabel").setText("Sample Length: " + nfc(sampleDuration*1000, 2) + " ms");

@@ -7,19 +7,26 @@ Minim minim;
 AudioPlayer filePlayer;
 AudioSample file;
 
+float[] envelope = new float[32];
+
 ArrayList<Grain> grains = new ArrayList<Grain>();
 
 void initAudio () {
   // create our Minim object for loading audio
   minim = new Minim(this);
   
-  filePlayer = minim.loadFile("samples/0.aif", 1024);
-  filePlayer.pause();
+  String defaultSample = selectedSample = "0.aif";
+  filePlayer = minim.loadFile("samples/"+defaultSample, 1024);
+  file = minim.loadSample("samples/"+defaultSample, 1024);
+  //filePlayer.pause();
   
-  file = minim.loadSample("samples/0.aif", 1024);
+  updateSampleName();
+  updateSampleDuration();
   
-  sampleDuration = file.getChannel(AudioSample.LEFT).length/file.sampleRate();
-  cp5.get(Textlabel.class, "sampledurationlabel").setText("Sample Length: " + nfc(sampleDuration*1000, 2) + " ms");
+  // Default is Hann
+  for(int i = 0; i < envelope.length; i++) {
+    envelope[i] = 0.5 * (1 - cos(TWO_PI*i/(envelope.length - 1)));
+  }
 }
 
 class Grain {
@@ -30,6 +37,8 @@ class Grain {
   public String fileName;
   public int startSample;
   public int endSample;
+  
+  public color grainColor;
   
   public float freqShift = 0;
   

@@ -1,5 +1,3 @@
-float[] envelope_values = new float[32];
-
 // TODO: Curve Drawing rather than arrays
 
 class EnvelopeCanvas extends Canvas {
@@ -12,11 +10,6 @@ class EnvelopeCanvas extends Canvas {
   char kKey;
   
   public void setup(PGraphics pg) {
-    // Default is Hann
-    for(int i = 0; i < envelope_values.length; i++) {
-      envelope_values[i] = 0.5 * (1 - cos(TWO_PI*i/(envelope_values.length - 1)));
-    }
-    
     y = 220+2*marginy+200;
   }  
 
@@ -41,14 +34,14 @@ class EnvelopeCanvas extends Canvas {
     
     if (mx >= x && mx < x+w && my >= y && my < y+h){
       if(mPress && mButton == LEFT) {
-        envelope_values[(int)map(mx, x, x+w, 0, envelope_values.length)] = map(my, y, y+h, 1, 0);
+        envelope[(int)map(mx, x, x+w, 0, envelope.length)] = map(my, y, y+h, 1, 0);
         isDrawGrainWave = true;
       }
     }
     
-    for(int i = 0; i < envelope_values.length; i++) {
+    for(int i = 0; i < envelope.length; i++) {
       pg.fill(255);
-      pg.rect(x+i*w/envelope_values.length, y+(1-envelope_values[i])*h, w/envelope_values.length, envelope_values[i]*h);
+      pg.rect(x+i*w/envelope.length, y+(1-envelope[i])*h, w/envelope.length, envelope[i]*h);
     }
   }
 }

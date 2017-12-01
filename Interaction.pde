@@ -2,6 +2,7 @@ final float maxfreq = 6000;
 String selectedSample = "";
 float[] selection = {-1, -1};
 
+Grain selectedGrain;
 
 // button listener
 void saveGrain(float w, float x) {
@@ -12,11 +13,17 @@ void saveGrain(float w, float x) {
     Grain grn = new Grain(abs(pos2-pos1));
     grn.fileName = selectedSample;
     grn.samples = subset(samples, min(pos1, pos2), abs(pos2-pos1));
+    grn.grainColor = color((int)random(0, 100), (int)random(80, 100), (int)random(20, 60));
+    
+    brushColor = grn.grainColor;
+    
+    selectedGrain = grn;
+    updateBrush();
     
     for( int i = 0; i < grn.samples.length - 1; i++ )
     { 
-      float e1 = envelope_values[(int)map(i, 0, grn.samples.length, 0, envelope_values.length)];
-      float e2 = envelope_values[(int)map(i+1, 0, grn.samples.length, 0, envelope_values.length)];
+      float e1 = envelope[(int)map(i, 0, grn.samples.length, 0, envelope.length)];
+      float e2 = envelope[(int)map(i+1, 0, grn.samples.length, 0, envelope.length)];
       grn.samples[i]   *= e1;
       grn.samples[i+1] *= e2;
     }  
@@ -33,16 +40,16 @@ void saveGrain(float w, float x) {
 
 // TODO: Grains dropdown
 void grains_dropdown(int n) {
-
+  selectedGrain = grains.get(n);
 }
 
 // samples dropdown listener
 void samples_dropdown(int n) {
   selectedSample = (String)cp5.get(ScrollableList.class, "samples_dropdown").getItem(n).get("name");
+  updateSampleName();
   
   filePlayer.close();
   filePlayer = minim.loadFile("samples/"+selectedSample, 1024);
- 
   file = minim.loadSample("samples/"+selectedSample, 1024);
   
   updateSampleDuration();
