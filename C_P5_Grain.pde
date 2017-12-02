@@ -1,14 +1,24 @@
 
-int brushSize = 100; 
+int brushSize = 100;
+int brushHardness = 0;
+
 PImage brush;
 color brushColor = color(255, 255, 255);
 
-void updateBrush() {
+float scalex = 20;
+float scaley = 20;
+
+void updateBrush(boolean reinstantiate) {
+  if(reinstantiate)
+    brush = new PImage(brushSize, brushSize, ARGB);
+    
   brush.loadPixels();
   for(int i = 0; i < brushSize; i++){
     for(int j = 0; j < brushSize; j++){
       brush.pixels[i*brushSize+j] = color(red(brushColor), green(brushColor), blue(brushColor), 
-                                          map(dist(j,i, brushSize*0.5,brushSize*0.5), 0, brushSize*0.5, 255, 0));
+                                          map(dist(j,i, brushSize*0.5,brushSize*0.5), 
+                                              brushSize*0.5*map(brushHardness, 0, 100, 0, 1), brushSize*0.5, 
+                                              255, 0));
     }
   }
   brush.updatePixels();
@@ -22,10 +32,11 @@ class GrainCanvas extends Canvas {
   
   int mx, my;
   public void setup(PGraphics pg) {
-    canvas = createImage(int(pg.width*.65-2*marginx), int((pg.height-2*marginy)*0.9), ARGB);
-    brush = createImage(brushSize, brushSize, ARGB);
+    w = pg.width*.65-2*marginx;
+    h = (pg.height-2*marginy)*0.9;
+    canvas = createImage(int(w/scalex), int(h/scaley), ARGB);
     
-    updateBrush();
+    updateBrush(true);
     
     x = marginx;
     y = marginy;
@@ -42,7 +53,7 @@ class GrainCanvas extends Canvas {
       if(p.mousePressed && p.mouseButton == LEFT) {
         canvas.blend(brush, 
                      0, 0, (int)brushSize, (int)brushSize, 
-                     int(mx-marginx-brushSize/2), int(my-marginy-brushSize/2), (int)brushSize, (int)brushSize,
+                     int((mx-marginx-brushSize/2)/scalex), int((my-marginy-brushSize/2)/scaley), int(brushSize/scalex), int(brushSize/scaley),
                      ADD);
       }
     }
@@ -53,11 +64,11 @@ class GrainCanvas extends Canvas {
     pg.fill(27);
     pg.rect(x, y, w, h);
     
-    pg.image(canvas, x, y);
+    pg.image(canvas, x, y, w, h*0.9);
     
     if (mx > x && mx < x+w && my > y && my < y+h*0.9){
       if(selectedGrain != null) {
-        pg.stroke(255);
+        pg.stroke(map(brushHardness, 0, 100, 255, 100));
         pg.noFill();
         pg.image(brush, mx-brushSize*0.5, my-brushSize*0.5);
         pg.ellipse(mx-brushSize*0.5, my-brushSize*0.5, brushSize, brushSize);

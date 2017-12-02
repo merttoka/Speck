@@ -124,7 +124,7 @@ class GrainSaveCanvas extends Canvas {
     mx = p.mouseX;
     my = p.mouseY;
     
-    if(timeElapsed < animTime && p.keyPressed && p.key == 's'){
+    if(timeElapsed < animTime && p.keyPressed && p.key == 'k'){
       timeElapsed += (millis() - prevTime);
     }
     
@@ -136,7 +136,7 @@ class GrainSaveCanvas extends Canvas {
     if(timeElapsed < 0)
       timeElapsed = 0;
     
-    if(!p.keyPressed || p.key != 's')
+    if(!p.keyPressed || p.key != 'k')
       timeElapsed -= timeElapsed/10;
     prevTime = millis();
   }
@@ -151,7 +151,7 @@ class GrainSaveCanvas extends Canvas {
     pg.textAlign(CENTER,CENTER);
     pg.textSize(16);
     pg.fill(map(timeElapsed, 0, animTime, 255, -100));
-    pg.text("Press and Hold 'S' button", x+w*0.5, y+h*0.5);
+    pg.text("Press and Hold 'K' button", x+w*0.5, y+h*0.5);
   }
 }
 

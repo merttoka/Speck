@@ -32,9 +32,9 @@ class EnvelopeCanvas extends Canvas {
     pg.fill(0);
     pg.rect(x, y, w, h);
     
-    if (mx >= x && mx < x+w && my >= y && my < y+h){
+    if (mx >= x && mx < x+w && my >= y-30 && my < y+h+30){
       if(mPress && mButton == LEFT) {
-        envelope[(int)map(mx, x, x+w, 0, envelope.length)] = map(my, y, y+h, 1, 0);
+        envelope[(int)map(mx, x, x+w, 0, envelope.length)] = constrain(map(my, y, y+h, 1, 0), 0, 1);
         isDrawGrainWave = true;
       }
     }

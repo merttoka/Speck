@@ -13,12 +13,13 @@ void saveGrain(float w, float x) {
     Grain grn = new Grain(abs(pos2-pos1));
     grn.fileName = selectedSample;
     grn.samples = subset(samples, min(pos1, pos2), abs(pos2-pos1));
+    randomSeed(millis());
     grn.grainColor = color((int)random(0, 100), (int)random(80, 100), (int)random(20, 60));
     
     brushColor = grn.grainColor;
     
     selectedGrain = grn;
-    updateBrush();
+    updateBrush(true);
     
     for( int i = 0; i < grn.samples.length - 1; i++ )
     { 
@@ -59,14 +60,7 @@ void samples_dropdown(int n) {
 }
 
 void mouseClicked() {
-  //if ( shapes.get(current_index) != null ) {
-  //  PShape s = shapes.get(current_index);
-  //  s.beginShape();
-  //  s.vertex(mouseX, mouseY);
-  //  s.endShape();
-    
-  //  sendMessage("/ptosc", map(log(mouseY), log(1), log(height-10), maxfreq, 0));
-  //}
+  
 }
 
 void keyPressed() {
@@ -74,15 +68,27 @@ void keyPressed() {
     if ( filePlayer.isPlaying() ) { filePlayer.pause(); }
     else                          { filePlayer.loop();  }
   }
-  //if( key == '+' ) {
-  //  current_index++;
-  //  if (current_index >= shapes.size()) {
-  //    addDefaultShape();
-  //  }
-  //}
-  //else if( key == '-' ) {
-  //  current_index--;
-  //}
   
-  //current_index = constrain(current_index,0,10);
+  if( key == 'w' ) {
+    brushSize+=2;
+    brushSize = constrain(brushSize++, 2, 100);
+    updateBrush(true);
+  }
+  else if( key == 's' ) {
+    brushSize-=2;
+    brushSize = constrain(brushSize--, 2, 100);
+    updateBrush(true);
+  }
+  
+  if( key == 'a' ) {
+    brushHardness-=2;
+    brushHardness = constrain(brushHardness--, 0, 100);
+    updateBrush(false);
+  }
+  else if( key == 'd' ) {
+    brushHardness+=2;
+    brushHardness = constrain(brushHardness++, 0, 100);
+    updateBrush(false);
+  }
+  
 }
