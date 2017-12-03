@@ -52,8 +52,8 @@ class GrainWaveformCanvas extends Canvas {
         float x2  = map( i+1, 0, grain_samples.length, x, x+w );
         float _y  = y + h*0.5;
       
-        float e1 = envelope[(int)map(i, 0, grain_samples.length, 0, envelope.length)];
-        float e2 = envelope[(int)map(i+1, 0, grain_samples.length, 0, envelope.length)];
+        float e1 = getInterpolation(map(i, 0, grain_samples.length, 0, envelope.length));
+        float e2 = getInterpolation(map(i+1, 0, grain_samples.length, 0, envelope.length));
       
         wave.stroke(255);
         wave.line( x1, _y + grain_samples[i]*e1*h, x2, _y + grain_samples[i+1]*e2*h);

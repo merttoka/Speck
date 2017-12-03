@@ -1,5 +1,15 @@
 // TODO: Curve Drawing rather than arrays
 
+float getInterpolation(float index) {
+  int lo = floor(index);
+  int hi = lo+1;
+  float t = index % 1.0;
+  if(lo >= 0 && hi < envelope.length) {
+    return envelope[lo]*(1-t) + envelope[hi]*t;
+  }
+  return 0;
+}
+
 class EnvelopeCanvas extends Canvas {
   public float x, y;
   public float w, h;

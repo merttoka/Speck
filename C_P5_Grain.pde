@@ -18,7 +18,7 @@ void updateBrush(boolean reinstantiate) {
       brush.pixels[i*brushSize+j] = color(red(brushColor), green(brushColor), blue(brushColor), 
                                           map(dist(j,i, brushSize*0.5,brushSize*0.5), 
                                               brushSize*0.5*map(brushHardness, 0, 100, 0, 1), brushSize*0.5, 
-                                              255, 0));
+                                              50, 0));
     }
   }
   brush.updatePixels();
