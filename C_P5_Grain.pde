@@ -1,12 +1,12 @@
 
-int brushSize = 100;
+int brushSize = 40;
 int brushHardness = 0;
 
 PImage brush;
 color brushColor = color(255, 255, 255);
 
-float scalex = 20;
-float scaley = 20;
+float scalex = 40;
+float scaley = 40;
 
 void updateBrush(boolean reinstantiate) {
   if(reinstantiate)
@@ -33,7 +33,7 @@ class GrainCanvas extends Canvas {
   int mx, my;
   public void setup(PGraphics pg) {
     w = pg.width*.65-2*marginx;
-    h = (pg.height-2*marginy)*0.9;
+    h = (pg.height-2*marginy);
     canvas = createImage(int(w/scalex), int(h/scaley), ARGB);
     
     updateBrush(true);
@@ -64,9 +64,29 @@ class GrainCanvas extends Canvas {
     pg.fill(27);
     pg.rect(x, y, w, h);
     
-    pg.image(canvas, x, y, w, h*0.9);
+    // draw the grid
+    float _cw = canvas.width;
+    float _ch = canvas.height;
+    pg.stroke(255, 20);
+    for(int i = 0; i < _cw; i++) {
+      float _x = x + w/_cw*i;
+      pg.line(_x, y, _x, y+h);
+    }
+    for(int j = 0; j < _ch; j++) {
+      if(j < _ch*0.5)
+        pg.stroke(255, map(j, 0, _ch*0.5, 2, 15));
+      else if (j == _ch*0.5)
+        pg.stroke(255, 50);
+      else
+        pg.stroke(255, map(j, _ch*0.5, _ch, 15, 2));
+        
+      float _y = y + h/_ch*j;
+      pg.line(x, _y, x+w, _y);
+    }
     
-    if (mx > x && mx < x+w && my > y && my < y+h*0.9){
+    pg.image(canvas, x, y, w, h);
+    
+    if (mx > x && mx < x+w && my > y && my < y+h){
       if(selectedGrain != null) {
         pg.stroke(map(brushHardness, 0, 100, 255, 100));
         pg.noFill();

@@ -21,6 +21,7 @@ void saveGrain(float w, float x) {
     selectedGrain = grn;
     updateBrush(true);
     
+    // apply envelope
     for( int i = 0; i < grn.samples.length - 1; i++ )
     { 
       float e1 = envelope[(int)map(i, 0, grn.samples.length, 0, envelope.length)];
@@ -29,7 +30,10 @@ void saveGrain(float w, float x) {
       grn.samples[i+1] *= e2;
     }  
     
+    // create triggerable AudioSample
+    grn.createGrainSample();
     
+    // repopulate grain dropdown
     String[] ids = new String[grains.size()];
     for(int i = 0; i < grains.size(); i++){
       ids[i] = str(grains.get(i).uid);

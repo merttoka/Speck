@@ -1,7 +1,7 @@
 
 import ddf.minim.*;
-import ddf.minim.spi.*; // for AudioRecordingStream
 import ddf.minim.ugens.*;
+import javax.sound.sampled.AudioFormat;
 
 Minim minim;
 AudioPlayer filePlayer;
@@ -42,6 +42,8 @@ class Grain {
   
   public float freqShift = 0;
   
+  AudioSample sample;
+  
   Grain(int l) {
     uid = grains.size();
     
@@ -49,5 +51,18 @@ class Grain {
     samples = new float[l];  
     
     grains.add(this);  
+  }
+  
+  void createGrainSample() {
+    AudioFormat format = new AudioFormat( 44100, // sample rate
+                                          16,    // sample size in bits
+                                          1,     // channels
+                                          true,  // signed
+                                          true   // bigEndian
+                                        ); 
+    sample = minim.createSample( this.samples, // the samples
+                                  format,  // the format
+                                  1024     // the output buffer size
+                                );
   }
 };
