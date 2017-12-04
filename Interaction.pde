@@ -4,6 +4,8 @@ float[] selection = {-1, -1};
 
 Grain selectedGrain;
 
+int maxGrains = 10;
+
 // button listener
 void saveGrain(float w, float x) {
   if(selection[0] >= 0 && selection[1] >= 0){
@@ -14,9 +16,11 @@ void saveGrain(float w, float x) {
     grn.fileName = selectedSample;
     grn.samples = subset(samples, min(pos1, pos2), abs(pos2-pos1));
     randomSeed(millis());
-    grn.grainColor = color((int)random(0, 100), (int)random(80, 100), (int)random(20, 60));
     
+    colorMode(HSB, maxGrains, 100, 100);
+    grn.grainColor = color(grn.uid, 100, 100);
     brushColor = grn.grainColor;
+    colorMode(RGB, 255, 255, 255);
     
     selectedGrain = grn;
     updateBrush(true);
@@ -46,6 +50,8 @@ void saveGrain(float w, float x) {
 // TODO: Grains dropdown
 void grains_dropdown(int n) {
   selectedGrain = grains.get(n);
+  brushColor = selectedGrain.grainColor;
+  updateBrush(true);
 }
 
 // samples dropdown listener
@@ -95,4 +101,11 @@ void keyPressed() {
     updateBrush(false);
   }
   
+  if(key == ' ') {
+    isPlaying = !isPlaying;
+  }
+  
+  if(key == 'p' && selectedGrain != null) {
+    selectedGrain.sample.trigger();
+  }
 }

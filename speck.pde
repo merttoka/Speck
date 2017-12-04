@@ -1,6 +1,9 @@
 //ArrayList<PShape> shapes = new ArrayList<PShape>();
 //int current_index = 0;
 
+long prevTime = millis();
+float deltaTime = 0;
+
 void setup() {
   //size(800, 500);
   fullScreen(1);
@@ -11,13 +14,14 @@ void setup() {
   
   //addDefaultShape();
   
-  initNetwork(12000, 57120);
+  //initNetwork(12000, 57120);
   
   textAlign(CENTER, CENTER);
   textSize(8);
 }
 
 void draw() {
+  deltaTime = millis() - prevTime;
   background(50);
   
   //drawGrid();
@@ -34,6 +38,8 @@ void draw() {
     
   //  shape(s, 0, 0);
   //}
+  
+  prevTime = millis();
 }
 
 //void drawGrid() {
