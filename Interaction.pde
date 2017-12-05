@@ -2,12 +2,10 @@ final float maxfreq = 6000;
 String selectedSample = "";
 float[] selection = {-1, -1};
 
+int maxGrains = 10;
 Grain selectedGrain;
 
-int maxGrains = 10;
-
-// envelope button listener
-// Hann, Hamm, Tri, Custom
+// envelope button listener -- Hann, Hamm, Tri, Custom
 void envelope_bar(int n) {
   switch(n) {
     case 0:
@@ -70,7 +68,7 @@ void saveGrain() {
   }
 }
 
-// TODO: Grains dropdown
+// grain dropdown
 void grains_dropdown(int n) {
   selectedGrain = grains.get(n);
   brushColor = selectedGrain.grainColor;
@@ -87,8 +85,9 @@ void samples_dropdown(int n) {
   file = minim.loadSample("samples/"+selectedSample, 1024);
   
   updateSampleDuration();
+  updateGrainDuration();
   
-  redraw = true;
+  isDrawWave = true;
   isDrawGrainWave = true;
 }
 

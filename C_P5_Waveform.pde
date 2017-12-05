@@ -1,6 +1,6 @@
 boolean isDrawWave = true;
 class WaveformCanvas extends Canvas {
-  float x, y, w, h;
+  public float x, y, w, h;
   
   int mx, my;
   boolean mPress;
@@ -49,7 +49,7 @@ class WaveformCanvas extends Canvas {
         selection[0] = mx;
         selection[1] = -1;
         filePlayer.cue((int)pos);
-        updateGrainDuration(x, x+w);
+        updateGrainDuration();
       }
       else if(mPress && mButton==RIGHT && filePlayer != null) {
         selection[1] = mx;
@@ -64,7 +64,7 @@ class WaveformCanvas extends Canvas {
         }
         
         // Redraws grain duration
-        updateGrainDuration(x, x+w);
+        updateGrainDuration();
       }
     }
     

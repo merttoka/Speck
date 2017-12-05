@@ -67,3 +67,13 @@ static String[] listFileNames(String dir) {
     return null;
   }
 }
+
+// Class getter
+Object getField(Object obj, String field) {
+  try{
+    return obj.getClass().getDeclaredField(field).get(obj);
+  }catch(Exception e) {
+    println("No \"" + field+"\" field in "+obj.getClass().getName());
+  }
+  return null;
+}

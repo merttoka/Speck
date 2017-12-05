@@ -2,11 +2,7 @@ boolean isDrawGrainWave = true;
 
 class GrainWaveformCanvas extends Canvas {
   float x, y, w, h;
-  
   int mx, my;
-  boolean mPress;
-  int mButton;
-  char kKey;
   
   PGraphics wave;
   
@@ -34,8 +30,8 @@ class GrainWaveformCanvas extends Canvas {
     
     if(selection[0] >= 0 && selection[1] >= 0 && isDrawGrainWave){
       float[] samples = file.getChannel(AudioSample.LEFT);
-      int pos1 = (int)map(selection[0], x, x+w, 0, samples.length);
-      int pos2 = (int)map(selection[1], x, x+w, 0, samples.length);
+      int pos1 = (int)cmap(selection[0], x, x+w, 0, samples.length);
+      int pos2 = (int)cmap(selection[1], x, x+w, 0, samples.length);
       float[] grain_samples = subset(samples, min(pos1, pos2), abs(pos2-pos1));
       
       wave.beginDraw();
@@ -43,12 +39,12 @@ class GrainWaveformCanvas extends Canvas {
       for( int i = 0; i < grain_samples.length - 1; i++ )
       {
         // find the x position of each buffer value
-        float x1  = map( i, 0, grain_samples.length, x, x+w );
-        float x2  = map( i+1, 0, grain_samples.length, x, x+w );
+        float x1  = cmap( i, 0, grain_samples.length, x, x+w );
+        float x2  = cmap( i+1, 0, grain_samples.length, x, x+w );
         float _y  = y + h*0.5;
       
-        float e1 = getFloatIndex(envelope, map(i, 0, grain_samples.length, 0, envelope.length));
-        float e2 = getFloatIndex(envelope, map(i+1, 0, grain_samples.length, 0, envelope.length));
+        float e1 = getFloatIndex(envelope, cmap(i, 0, grain_samples.length, 0, envelope.length));
+        float e2 = getFloatIndex(envelope, cmap(i+1, 0, grain_samples.length, 0, envelope.length));
       
         wave.stroke(255);
         wave.line( x1, _y + grain_samples[i]*e1*h, x2, _y + grain_samples[i+1]*e2*h);

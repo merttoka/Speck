@@ -10,8 +10,10 @@ void updateSampleDuration() {
   cp5.get(Textlabel.class, "sampledurationlabel").setText("Sample Length: " + nfc(sampleDuration*1000, 2) + " ms");
 }
 
-// TODO: Fix bugs
-void updateGrainDuration(float x1, float x2) {
+void updateGrainDuration() { 
+  float x1 = (float)getField(wc, "x");
+  float x2 = x1 + (float)getField(wc, "w");
+    
   float pos1 = map(selection[0], x1, x2, 0, file.getChannel(AudioSample.LEFT).length);
   float pos2 = map(selection[1], x1, x2, 0, file.getChannel(AudioSample.LEFT).length);
   

@@ -19,7 +19,6 @@ void initAudio () {
   
   updateSampleName();
   updateSampleDuration();
-  
-  // Default envelope is Hann
+ 
   loadHann(envelope);
 }
