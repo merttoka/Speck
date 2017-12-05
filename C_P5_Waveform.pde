@@ -1,9 +1,6 @@
-boolean redraw = true;
-
-
+boolean isDrawWave = true;
 class WaveformCanvas extends Canvas {
-  public float x, y;
-  public float w, h;
+  float x, y, w, h;
   
   int mx, my;
   boolean mPress;
@@ -12,18 +9,18 @@ class WaveformCanvas extends Canvas {
   
   PGraphics wave;
   
+  WaveformCanvas(float x, float y, float w, float h) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+  }
+  
   public void setup(PGraphics pg) {
-    y = 220+marginy;
-    
     wave = createGraphics(pg.width, pg.height);
   }  
 
   public void update(PApplet p) {
-    x = p.width * 0.75 + 10;
-    
-    w = int(p.width*0.19);
-    h = 150;
-    
     mx = p.mouseX;
     my = p.mouseY;
     mPress = p.mousePressed;
@@ -96,7 +93,7 @@ class WaveformCanvas extends Canvas {
     }
     
     // Draw waveshape
-    if(filePlayer != null && file != null && redraw) {
+    if(filePlayer != null && file != null && isDrawWave) {
       float[] samples = file.getChannel(AudioSample.LEFT);
       wave.beginDraw();
       wave.background(0,0);
@@ -111,7 +108,7 @@ class WaveformCanvas extends Canvas {
         wave.line( x1, _y + samples[i]*h*0.6, x2, _y + samples[i+1]*h*0.6);
       }  
       wave.endDraw();
-      redraw = false;
+      isDrawWave = false;
     }
     pg.image(wave, 0, 0);
   }

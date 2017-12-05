@@ -70,7 +70,7 @@ class GrainCanvas extends Canvas {
         canvas.blend(brush, 
                      0, 0, (int)brushSize, (int)brushSize, 
                      int((mx-marginx-brushSize/2)/scalex), int((my-marginy-brushSize/2)/scaley), int(brushSize/scalex), int(brushSize/scaley),
-                     ADD);
+                     REPLACE);
       }
     }
     
@@ -82,10 +82,21 @@ class GrainCanvas extends Canvas {
          current_timestamp = int(map(time, 0, maxTime, 0, canvas.width));
          
          color[] arr = getPixelsAt(current_timestamp);
+         int countNonZero = 0;
+         for(int i = 0; i < arr.length; i++)
+           if(arr[i] != 0) countNonZero++;
          for(int i = 0; i < arr.length; i++) {
            if(arr[i] != 0) {
              int id = int(map(hue(arr[i]), 0, 255, 0, maxGrains));
-             grains.get(id).sample.trigger();
+             
+             // TODO Phaseshift based on Y
+             try{
+               grains.get(id).sample.setGain(map(brightness(arr[i]), 0, 255, -60, 0));
+               grains.get(id).sample.trigger();
+             } 
+             catch(Exception e){
+               print(".");
+             }
            }
          }
       }

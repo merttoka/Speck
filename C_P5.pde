@@ -8,15 +8,16 @@ Canvas gc, wc, ec, sc, gwc;
 int marginx = 30;
 int marginy = 45;
 
+// Initializes the GUI components
 void initControls() {
   cp5 = new ControlP5(this);
   
   // Canvas
   gc = new GrainCanvas();
-  gc.pre(); // use cc.post(); to draw on top of existing controllers.
+  gc.pre();
   cp5.addCanvas(gc);
   
-  printArray(PFont.list());
+  // Setup font systemwide
   PFont font = createFont("Ubuntu Mono Bold", 11);
   cp5.setFont(font);
   textFont(font);
@@ -46,123 +47,96 @@ void initListWindow() {
 }
 
 void initEditWindow() {
+  PVector container_position = new PVector(width - (width * 0.25), marginy);
+  
+  int container_margin = 10;
+  int container_width = int(width*0.25 - 3*marginx);
+  int container_height = int(height - 2*marginy);
+  
+  PVector element_position = new PVector(container_position.x+container_margin,
+                                         container_position.y+container_margin);
+  int element_width = int(container_width - 2*container_margin);
+  int item_height = 200;
+  
   Group grainEditGroup = cp5.addGroup("grainEditGroup")
-                            .setPosition(width - (width * 0.25), marginy)
                             .setTitle("Create and edit grains")
-                            .setWidth(int(width*0.25 - 3*marginx))
-                            .setBackgroundHeight(height - 2*marginy)
-                            .setBackgroundColor(color(255,50));              
-  grainEditGroup.disableCollapse();
+                            .setPosition(container_position.x, container_position.y)
+                            .setWidth(container_width)
+                            .setBackgroundHeight(container_height)
+                            .setBackgroundColor(color(255,50))
+                            .disableCollapse();
   grainEditGroup.getCaptionLabel().hide();
  
   String[] filenames = listFileNames(sketchPath()+"/samples");
   cp5.addScrollableList("samples_dropdown")
-     .setPosition(10, 10)
-     .setSize(int(width*0.19), 200)
+     .setPosition(container_margin, container_margin)
+     .setSize(element_width, item_height)
      .setBarHeight(20)
      .setItemHeight(20)
      .addItems(Arrays.asList(filenames))
      .setType(ControlP5.LIST)
      .setGroup(grainEditGroup);
+  element_position.y += item_height+container_margin;
   
   // Sample Player
-  wc = new WaveformCanvas();
-  wc.pre(); // use cc.post(); to draw on top of existing controllers.
+  item_height = 150;
+  wc = new WaveformCanvas(element_position.x, 
+                          element_position.y, 
+                          element_width, 
+                          item_height);
+  wc.pre();
   cp5.addCanvas(wc); 
+  element_position.y += item_height+container_margin - marginy;
   
-  
+  // Info Labels
+  item_height = 20;
   cp5.addTextlabel("samplenamelabel")
     .setText("Sample Name: "+selectedSample)
-    .setPosition(10,200+150+30)
+    .setPosition(container_margin, element_position.y)
     .setGroup(grainEditGroup);
   cp5.addTextlabel("sampledurationlabel")
     .setText("Sample Length: 0 ms")
-    .setPosition(10,200+150+50)
+    .setPosition(container_margin, element_position.y+item_height)
     .setGroup(grainEditGroup);
   cp5.addTextlabel("graindurationlabel")
     .setText("Selection Length: 0 ms")
-    .setPosition(10,200+150+70)
+    .setPosition(container_margin, element_position.y+2*item_height)
     .setGroup(grainEditGroup);
+  element_position.y += 3*item_height+container_margin;
 
-  // TODO: Put buttons for common envelopes (hamming, hanning)
-  ec = new EnvelopeCanvas();
-  ec.pre(); // use cc.post(); to draw on top of existing controllers.
+  // Envelope defaults
+  item_height = 20;
+  cp5.addButtonBar("envelope_bar")
+     .setPosition(container_margin, element_position.y)
+     .setSize(element_width, item_height)
+     .addItems(split("Hann Hamm Tri Custom", ' '))
+     .setGroup(grainEditGroup);
+  element_position.y += item_height + marginy;
+     
+  // Envelope canvas
+  item_height = 100;
+  ec = new EnvelopeCanvas(element_position.x, 
+                          element_position.y, 
+                          element_width,
+                          item_height);
+  ec.pre();
   cp5.addCanvas(ec); 
+  element_position.y += item_height + container_margin;
   
   // Waveshape of the grain
-  gwc = new GrainWaveformCanvas();
-  gwc.pre(); // use cc.post(); to draw on top of existing controllers.
+  item_height = 100;
+  gwc = new GrainWaveformCanvas(element_position.x, 
+                                element_position.y, 
+                                element_width,
+                                item_height);
+  gwc.pre(); 
   cp5.addCanvas(gwc); 
-  
+  element_position.y += item_height + container_margin - marginy;
   
   // Save grain button
-  sc = new GrainSaveCanvas();
-  sc.pre(); // use cc.post(); to draw on top of existing controllers.
-  cp5.addCanvas(sc); 
-}
-
-
-class GrainSaveCanvas extends Canvas {
-  public float x, y;
-  public float w, h;
-  
-  private float animTime = 500;
-  
-  private float prevTime = millis();
-  private float timeElapsed = 0;
-  
-  int mx, my;
-  public void setup(PGraphics pg) {
-    h = 50;
-    y = height-marginy-10-h;
-  }  
-
-  public void update(PApplet p) {
-    x = p.width * 0.75 + 10;
-    w = p.width*0.19;
-    
-    mx = p.mouseX;
-    my = p.mouseY;
-    
-    if(timeElapsed < animTime && p.keyPressed && p.key == 'k'){
-      timeElapsed += (millis() - prevTime);
-    }
-    
-    if(timeElapsed > animTime)
-    {
-      timeElapsed = 0;
-      saveGrain(w, x);
-    }
-    if(timeElapsed < 0)
-      timeElapsed = 0;
-    
-    if(!p.keyPressed || p.key != 'k')
-      timeElapsed -= timeElapsed/10;
-    prevTime = millis();
-  }
-
-  public void draw(PGraphics pg) {
-    pg.fill(27);
-    pg.rect(x, y, w, h);
-    
-    pg.fill(timeElapsed > animTime ? 255 : map(timeElapsed, 0, animTime, 27, 200));
-    pg.rect(x, y, map(timeElapsed, 0, animTime, 0, w), h);
-    
-    pg.textAlign(CENTER,CENTER);
-    pg.textSize(16);
-    pg.fill(map(timeElapsed, 0, animTime, 255, -100));
-    pg.text("Press and Hold 'K' button", x+w*0.5, y+h*0.5);
-  }
-}
-
-
-String[] listFileNames(String dir) {
-  File file = new File(dir);
-  if (file.isDirectory()) {
-    String names[] = file.list();
-    return names;
-  } else {
-    // If it's not a directory
-    return null;
-  }
+  item_height = 50;
+  cp5.addButton("saveGrain")
+     .setPosition(container_margin, element_position.y)
+     .setSize(element_width, item_height)
+     .setGroup(grainEditGroup);
 }

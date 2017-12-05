@@ -1,8 +1,7 @@
 boolean isDrawGrainWave = true;
 
 class GrainWaveformCanvas extends Canvas {
-  public float x, y;
-  public float w, h;
+  float x, y, w, h;
   
   int mx, my;
   boolean mPress;
@@ -11,24 +10,20 @@ class GrainWaveformCanvas extends Canvas {
   
   PGraphics wave;
   
+  GrainWaveformCanvas(float x, float y, float w, float h) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+  }
+  
   public void setup(PGraphics pg) {
-    y = 220+2*marginy+400;
-    
     wave = createGraphics(pg.width, pg.height);
   }  
 
   public void update(PApplet p) {
-    x = p.width - (p.width*0.25) + 10;
-    
-    w = int(p.width*0.19);
-    h = 100;
-    
     mx = p.mouseX;
     my = p.mouseY;
-    mPress = p.mousePressed;
-    mButton = p.mouseButton;
-    
-    kKey = p.key;
   }
 
   public void draw(PGraphics pg) {
@@ -52,8 +47,8 @@ class GrainWaveformCanvas extends Canvas {
         float x2  = map( i+1, 0, grain_samples.length, x, x+w );
         float _y  = y + h*0.5;
       
-        float e1 = getInterpolation(map(i, 0, grain_samples.length, 0, envelope.length));
-        float e2 = getInterpolation(map(i+1, 0, grain_samples.length, 0, envelope.length));
+        float e1 = getFloatIndex(envelope, map(i, 0, grain_samples.length, 0, envelope.length));
+        float e2 = getFloatIndex(envelope, map(i+1, 0, grain_samples.length, 0, envelope.length));
       
         wave.stroke(255);
         wave.line( x1, _y + grain_samples[i]*e1*h, x2, _y + grain_samples[i+1]*e2*h);

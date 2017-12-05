@@ -6,9 +6,32 @@ Grain selectedGrain;
 
 int maxGrains = 10;
 
+// envelope button listener
+// Hann, Hamm, Tri, Custom
+void envelope_bar(int n) {
+  switch(n) {
+    case 0:
+      loadHann(envelope);
+      break;
+    case 1:
+      loadHamm(envelope);
+      break;
+    case 2:
+      loadTri(envelope);
+      break;
+    case 3:
+      loadCustom(envelope);
+      break;
+  }
+  isDrawGrainWave = true;
+}
+
 // button listener
-void saveGrain(float w, float x) {
-  if(selection[0] >= 0 && selection[1] >= 0){
+void saveGrain() {
+  if(selection[0] >= 0 && selection[1] >= 0 && grains.size() < maxGrains){
+    float x = width * 0.75 + 10;
+    float w = width * 0.19;
+    
     float[] samples = file.getChannel(AudioSample.LEFT);
     int pos1 = (int)map(selection[0], x, x+w, 0, samples.length);
     int pos2 = (int)map(selection[1], x, x+w, 0, samples.length);
@@ -67,10 +90,6 @@ void samples_dropdown(int n) {
   
   redraw = true;
   isDrawGrainWave = true;
-}
-
-void mouseClicked() {
-  
 }
 
 void keyPressed() {
