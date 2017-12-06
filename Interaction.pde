@@ -30,13 +30,13 @@ void saveGrain() {
     float x = width * 0.75 + 10;
     float w = width * 0.19;
     
-    float[] samples = file.getChannel(AudioSample.LEFT);
+    float[] samples = file.getChannel(0);
     int pos1 = (int)map(selection[0], x, x+w, 0, samples.length);
     int pos2 = (int)map(selection[1], x, x+w, 0, samples.length);
-    Grain grn = new Grain(abs(pos2-pos1));
+    Grain grn = new Grain(abs(pos2-pos1), sampler.sampleRate());
     grn.fileName = selectedSample;
     grn.samples = subset(samples, min(pos1, pos2), abs(pos2-pos1));
-    randomSeed(millis());
+    
     
     colorMode(HSB, maxGrains, 100, 100);
     grn.grainColor = color(grn.uid, 100, 100);
@@ -49,14 +49,15 @@ void saveGrain() {
     // apply envelope
     for( int i = 0; i < grn.samples.length - 1; i++ )
     { 
-      float e1 = envelope[(int)map(i, 0, grn.samples.length, 0, envelope.length)];
-      float e2 = envelope[(int)map(i+1, 0, grn.samples.length, 0, envelope.length)];
+      float e1 = getFloatIndex(envelope, cmap(i, 0, samples.length, 0, envelope.length));
+      float e2 = getFloatIndex(envelope, cmap(i+1, 0, samples.length, 0, envelope.length));
       grn.samples[i]   *= e1;
       grn.samples[i+1] *= e2;
     }  
     
-    // create triggerable AudioSample
+    // create triggerable Sampler
     grn.createGrainSample();
+    grains.add(grn);
     
     // repopulate grain dropdown
     String[] ids = new String[grains.size()];
@@ -78,12 +79,9 @@ void grains_dropdown(int n) {
 // samples dropdown listener
 void samples_dropdown(int n) {
   selectedSample = (String)cp5.get(ScrollableList.class, "samples_dropdown").getItem(n).get("name");
+  loadSample(selectedSample);
+  
   updateSampleName();
-  
-  filePlayer.close();
-  filePlayer = minim.loadFile("samples/"+selectedSample, 1024);
-  file = minim.loadSample("samples/"+selectedSample, 1024);
-  
   updateSampleDuration();
   updateGrainDuration();
   
@@ -93,8 +91,8 @@ void samples_dropdown(int n) {
 
 void keyPressed() {
   if(key == '1') {
-    if ( filePlayer.isPlaying() ) { filePlayer.pause(); }
-    else                          { filePlayer.loop();  }
+    //if ( filePlayer.isPlaying() ) { filePlayer.pause(); }
+    //else                          { filePlayer.loop();  }
   }
   
   if( key == 'w' ) {
@@ -124,6 +122,12 @@ void keyPressed() {
   }
   
   if(key == 'p' && selectedGrain != null) {
+    println("Triggering");
     selectedGrain.sample.trigger();
+  }
+  
+  if(key == 'e') {
+    sampler.setSampleRate(44100*cmap(mouseX, 0, width, 0.1 , 2));
+    sampler.trigger();
   }
 }

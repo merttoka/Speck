@@ -31,7 +31,7 @@ class WaveformCanvas extends Canvas {
       selection[0] = -1;
       selection[1] = -1;
       
-      filePlayer.setLoopPoints(0, filePlayer.length());
+      //filePlayer.setLoopPoints(0, filePlayer.length());
     }
   }
 
@@ -41,27 +41,28 @@ class WaveformCanvas extends Canvas {
     pg.rect(x, y, w, h);
     
     if (mx >= x && mx < x+w && my >= y && my < y+h){
+      //int file_length = file.getChannel(0).length;
+      
       pg.stroke(200, 0, 0, 150);
       pg.line(mx, y, mx, y+h);
       
-      if(mPress && mButton==LEFT && filePlayer != null) {
-        float pos = map(mx, x, x+w, 0, filePlayer.length());
+      if(mPress && mButton==LEFT && file != null) {
+        //float pos = map(mx, x, x+w, 0, file_length);
         selection[0] = mx;
         selection[1] = -1;
-        filePlayer.cue((int)pos);
+        //filePlayer.cue((int)pos);
         updateGrainDuration();
       }
-      else if(mPress && mButton==RIGHT && filePlayer != null) {
+      else if(mPress && mButton==RIGHT && file != null) {
         selection[1] = mx;
         
         isDrawGrainWave = true;
         
-        // limit to 1/fps seconds chops
-        float pos1 = map(selection[0], x, x+w, 0, filePlayer.length());
-        float pos2 = map(selection[1], x, x+w, 0, filePlayer.length());
-        if(abs(pos2-pos1) > file.sampleRate()/frameRate) {
-          selection[1] = map(pos1+file.sampleRate()/frameRate, 0, filePlayer.length(), x, x+w);
-        }
+        //float pos1 = map(selection[0], x, x+w, 0, filePlayer.length());
+        //float pos2 = map(selection[1], x, x+w, 0, filePlayer.length());
+        //if(abs(pos2-pos1) > file.sampleRate()/frameRate) {
+        //  selection[1] = map(pos1+file.sampleRate()/frameRate, 0, filePlayer.length(), x, x+w);
+        //}
         
         // Redraws grain duration
         updateGrainDuration();
@@ -81,20 +82,20 @@ class WaveformCanvas extends Canvas {
       pg.noStroke();
       pg.fill(190, 190, 0, 50);
       pg.rect(selection[0], y, selection[1]-selection[0], h);
-      filePlayer.setLoopPoints((int)map(selection[0], x, x+w, 0, filePlayer.length()),
-                               (int)map(selection[1], x, x+w, 0, filePlayer.length()));
+      //filePlayer.setLoopPoints((int)map(selection[0], x, x+w, 0, filePlayer.length()),
+      //                         (int)map(selection[1], x, x+w, 0, filePlayer.length()));
     }
     
     // Draw player cue (position)
-    if(filePlayer.isPlaying()) {
-      float songPos = map( filePlayer.position(), 0, filePlayer.length(), x, x+w);
-      pg.stroke(169, 200, 90, 150);
-      pg.line(songPos, y, songPos, y+h);
-    }
+    //if(filePlayer.isPlaying()) {
+    //  float songPos = map( filePlayer.position(), 0, filePlayer.length(), x, x+w);
+    //  pg.stroke(169, 200, 90, 150);
+    //  pg.line(songPos, y, songPos, y+h);
+    //}
     
     // Draw waveshape
-    if(filePlayer != null && file != null && isDrawWave) {
-      float[] samples = file.getChannel(AudioSample.LEFT);
+    if(file != null && file != null && isDrawWave) {
+      float[] samples = file.getChannel(0);
       wave.beginDraw();
       wave.background(0,0);
       for( int i = 0; i < samples.length - 1; i++ )

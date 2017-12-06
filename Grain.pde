@@ -2,6 +2,7 @@ class Grain {
   public int uid;
   public int length;
   public float[] samples;
+  public float sampleRate;
   
   public String fileName;
   public int startSample;
@@ -9,30 +10,28 @@ class Grain {
   
   public color grainColor;
   
-  public float freqShift = 0;
+  Sampler sample;
+  MultiChannelBuffer buffer;
   
-  AudioSample sample;
-  
-  Grain(int l) {
-    uid = grains.size();
+  Grain(int l, float sr) {
+    this.uid = grains.size();
     
+    this.sampleRate = sr;
     this.length = l;
-    samples = new float[l];  
+    this.samples = new float[l];  
     
-    grains.add(this);  
+    this.buffer = new MultiChannelBuffer( l, 1 );
   }
   
   void createGrainSample() {
-    AudioFormat format = new AudioFormat( 44100, // sample rate
-                                          16,    // sample size in bits
-                                          1,     // channels
-                                          true,  // signed
-                                          true   // bigEndian
-                                        ); 
-                                      
-    sample = minim.createSample( this.samples, // the samples
-                                  format,  // the format
-                                  1024     // the output buffer size
-                                );
+    buffer.setBufferSize(samples.length);
+    buffer.setChannel(0, samples);
+    
+    println("Grain created: ", buffer.getBufferSize());
+    
+    this.sample = new Sampler( buffer, sampleRate, 1 );
+    this.sample.patch(output);
+    
+    println(sample.sampleRate());
   }
 };

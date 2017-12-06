@@ -29,7 +29,7 @@ class GrainWaveformCanvas extends Canvas {
     pg.rect(x, y, w, h);
     
     if(selection[0] >= 0 && selection[1] >= 0 && isDrawGrainWave){
-      float[] samples = file.getChannel(AudioSample.LEFT);
+      float[] samples = file.getChannel(0);
       int pos1 = (int)cmap(selection[0], x, x+w, 0, samples.length);
       int pos2 = (int)cmap(selection[1], x, x+w, 0, samples.length);
       float[] grain_samples = subset(samples, min(pos1, pos2), abs(pos2-pos1));

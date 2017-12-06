@@ -10,9 +10,6 @@ void setup() {
   
   initControls();
   initAudio();
-  
-  textAlign(CENTER, CENTER);
-  textSize(8);
 }
 
 void draw() {

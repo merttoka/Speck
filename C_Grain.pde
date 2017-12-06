@@ -77,29 +77,29 @@ class GrainCanvas extends Canvas {
     if (isPlaying) {
       time += deltaTime;
       
-      // trig samples on integer time
+      // trig samples only on integer time
       if(int(map(time, 0, maxTime, 0, canvas.width)) > current_timestamp) {
          current_timestamp = int(map(time, 0, maxTime, 0, canvas.width));
          
          color[] arr = getPixelsAt(current_timestamp);
-         float count = 0, value = 0;
+         //float count = 0, value = 0;
+         //for(int i = 0; i < arr.length; i++) {
+         //  if(arr[i] != 0) {
+         //    value += cmap(brightness(arr[i]), 0, 255, 0.1, 1);
+         //    count++;
+         //  }
+         //}
          for(int i = 0; i < arr.length; i++) {
            if(arr[i] != 0) {
-             value += cmap(brightness(arr[i]), 0, 255, 0.1, 1);
-             count++;
-           }
-         }
-         for(int i = 0; i < arr.length; i++) {
-           if(arr[i] != 0) {
-             int id = int(map(hue(arr[i]), 0, 255, 0, maxGrains));
-             
-             // TODO Phaseshift based on Y
              try{
-               grains.get(id).sample.setGain(atodb(cmap(brightness(arr[i]), 0, 255, 0.1, 1)/value));
-               grains.get(id).sample.trigger();
+               int id = int(map(hue(arr[i]), 0, 255, 0, maxGrains));
+               Grain g = grains.get(id);
+               
+               g.sample.setSampleRate(g.sampleRate * cmap(i, 0, arr.length, 0.1 , 2));
+               g.sample.trigger();
              } 
              catch(Exception e){
-               print(".");
+               e.printStackTrace();
              }
            }
          }

@@ -6,7 +6,7 @@ void updateSampleName() {
 }
 
 void updateSampleDuration() {
-  sampleDuration = file.getChannel(AudioSample.LEFT).length/file.sampleRate();
+  sampleDuration = file.getChannel(0).length/sampler.sampleRate();
   cp5.get(Textlabel.class, "sampledurationlabel").setText("Sample Length: " + nfc(sampleDuration*1000, 2) + " ms");
 }
 
@@ -14,9 +14,9 @@ void updateGrainDuration() {
   float x1 = (float)getField(wc, "x");
   float x2 = x1 + (float)getField(wc, "w");
     
-  float pos1 = map(selection[0], x1, x2, 0, file.getChannel(AudioSample.LEFT).length);
-  float pos2 = map(selection[1], x1, x2, 0, file.getChannel(AudioSample.LEFT).length);
+  float pos1 = map(selection[0], x1, x2, 0, file.getChannel(0).length);
+  float pos2 = map(selection[1], x1, x2, 0, file.getChannel(0).length);
   
-  grainDuration = selection[1] >= 0 ? abs(pos2-pos1)/file.sampleRate() : 0;
+  grainDuration = selection[1] >= 0 ? abs(pos2-pos1)/sampler.sampleRate() : 0;
   cp5.get(Textlabel.class, "graindurationlabel").setText("Selection Length: " + nfc(grainDuration*1000, 2) + " ms");
 }

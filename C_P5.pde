@@ -2,7 +2,6 @@ import controlP5.*;
 import java.util.*;
 
 ControlP5 cp5;
-ControlWindow controlWindow;
 Canvas gc, wc, ec, sc, gwc;
 
 int marginx = 30;
@@ -18,9 +17,11 @@ void initControls() {
   cp5.addCanvas(gc);
   
   // Setup font systemwide
-  PFont font = createFont("Ubuntu Mono Bold", 11);
+  PFont font = createFont("Ubuntu Mono Bold", 12);
   cp5.setFont(font);
   textFont(font);
+  textAlign(CENTER, CENTER);
+  //textSize(8);
   
   // Editors
   initListWindow();
