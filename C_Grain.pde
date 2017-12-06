@@ -1,11 +1,4 @@
-
-int brushSize = 100;
-int brushHardness = 0;
-
-PImage brush;
-color brushColor = color(255, 255, 255);
-
-float scalex = 20;
+float scalex = 10;
 float scaley = 40;
 
 float time = 0;
@@ -13,25 +6,8 @@ float maxTime = 5000;
 boolean isPlaying = false;
 int current_timestamp = -1;
 
-void updateBrush(boolean reinstantiate) {
-  if(reinstantiate)
-    brush = new PImage(brushSize, brushSize, ARGB);
-    
-  brush.loadPixels();
-  for(int i = 0; i < brushSize; i++){
-    for(int j = 0; j < brushSize; j++){
-      brush.pixels[i*brushSize+j] = color(red(brushColor), green(brushColor), blue(brushColor), 
-                                          map(dist(j,i, brushSize*0.5,brushSize*0.5), 
-                                              brushSize*0.5*map(brushHardness, 0, 100, 0, 1), brushSize*0.5, 
-                                              50, 0));
-    }
-  }
-  brush.updatePixels();
-}
-
 class GrainCanvas extends Canvas {
-  public float x, y;
-  public float w, h;
+  public float x, y, w, h;
   
   private PImage canvas;
   
@@ -47,16 +23,16 @@ class GrainCanvas extends Canvas {
     
     return ys;
   }
-  public void setup(PGraphics pg) {
-    w = pg.width*.65-2*marginx;
-    h = (pg.height-2*marginy);
+  public GrainCanvas(float x, float y, float w, float h) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    
     canvas = createImage(int(w/scalex), int(h/scaley), ARGB);
-    
-    updateBrush(true);
-    
-    x = marginx;
-    y = marginy;
-  }  
+  }
+  
+  public void setup(PGraphics pg) {}  
 
   public void update(PApplet p) {
     w = p.width * 0.65 - 2*marginx;
@@ -66,11 +42,11 @@ class GrainCanvas extends Canvas {
     my = p.mouseY;
     
     if (mx >= x && mx < x+w && my >= y && my < y+h){
-      if(p.mousePressed && p.mouseButton == LEFT) {
-        canvas.blend(brush, 
-                     0, 0, (int)brushSize, (int)brushSize, 
-                     int((mx-marginx-brushSize/2)/scalex), int((my-marginy-brushSize/2)/scaley), int(brushSize/scalex), int(brushSize/scaley),
-                     ADD);
+      if(p.mousePressed && p.mouseButton == LEFT && selectedGrain != null) {
+        int pixdex = int((my-marginy)/scaley) * canvas.width + int((mx-marginx)/scalex);
+        canvas.loadPixels();
+        canvas.pixels[pixdex] = selectedGrain.grainColor;
+        canvas.updatePixels();
       }
     }
     
@@ -78,17 +54,11 @@ class GrainCanvas extends Canvas {
       time += deltaTime;
       
       // trig samples only on integer time
-      if(int(map(time, 0, maxTime, 0, canvas.width)) > current_timestamp) {
-         current_timestamp = int(map(time, 0, maxTime, 0, canvas.width));
+      int timestamp_location = int(map(time, 0, maxTime, 0, canvas.width));
+      if(timestamp_location > current_timestamp) {
+         current_timestamp = timestamp_location;
          
          color[] arr = getPixelsAt(current_timestamp);
-         //float count = 0, value = 0;
-         //for(int i = 0; i < arr.length; i++) {
-         //  if(arr[i] != 0) {
-         //    value += cmap(brightness(arr[i]), 0, 255, 0.1, 1);
-         //    count++;
-         //  }
-         //}
          for(int i = 0; i < arr.length; i++) {
            if(arr[i] != 0) {
              try{
@@ -99,7 +69,8 @@ class GrainCanvas extends Canvas {
                g.sample.trigger();
              } 
              catch(Exception e){
-               e.printStackTrace();
+               println(".");
+               //e.printStackTrace();
              }
            }
          }
@@ -143,15 +114,5 @@ class GrainCanvas extends Canvas {
     float _x = x + map(time, 0, maxTime, 0, w);
     pg.stroke(255, isPlaying? 150 : 50);
     pg.line(_x, y, _x, y+h);
-    
-    // draw brush
-    if (mx > x && mx < x+w && my > y && my < y+h){
-      if(selectedGrain != null) {
-        pg.stroke(map(brushHardness, 0, 100, 255, 100));
-        pg.noFill();
-        pg.image(brush, mx-brushSize*0.5, my-brushSize*0.5);
-        pg.ellipse(mx-brushSize*0.5, my-brushSize*0.5, brushSize, brushSize);
-      }
-    }
   }
 }

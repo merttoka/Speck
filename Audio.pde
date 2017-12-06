@@ -35,17 +35,6 @@ float loadSample(String sample) {
   float sampleRate = minim.loadFileIntoBuffer( "samples/"+selectedSample, file );
  
   if(sampleRate > 0 ) {
-    
-  //  int originalBufferSize = sampleBuffer.getBufferSize();
-  //  sampleBuffer.setBufferSize( originalBufferSize * 2 );    
-  //    int   delayIndex  = s + int( random( 0, originalBufferSize ) );
-  //    float sampleValue = sampleBuffer.getSample( 0, s );
-  //    float destValue   = sampleBuffer.getSample( 0, delayIndex ); 
-  //    sampleBuffer.setSample( 0, // channel
-  //                            delayIndex, // sample frame to set
-  //                            sampleValue + destValue // the value to set
-  //                          );
-  
     sampler = new Sampler( file, sampleRate, 1 );
     sampler.patch(output);
   

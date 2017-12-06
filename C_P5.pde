@@ -12,7 +12,8 @@ void initControls() {
   cp5 = new ControlP5(this);
   
   // Canvas
-  gc = new GrainCanvas();
+  gc = new GrainCanvas(marginx, marginy, 
+                       width*.65-2*marginx, height-2*marginy);
   gc.pre();
   cp5.addCanvas(gc);
   
