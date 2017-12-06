@@ -1,4 +1,4 @@
-float scalex = 10;
+float scalex = 25;
 float scaley = 40;
 
 float time = 0;
@@ -42,11 +42,20 @@ class GrainCanvas extends Canvas {
     my = p.mouseY;
     
     if (mx >= x && mx < x+w && my >= y && my < y+h){
-      if(p.mousePressed && p.mouseButton == LEFT && selectedGrain != null) {
+      try {
         int pixdex = int((my-marginy)/scaley) * canvas.width + int((mx-marginx)/scalex);
-        canvas.loadPixels();
-        canvas.pixels[pixdex] = selectedGrain.grainColor;
-        canvas.updatePixels();
+        if(p.mousePressed && p.mouseButton == LEFT && selectedGrain != null) {
+          canvas.loadPixels();
+          canvas.pixels[pixdex] = selectedGrain.grainColor;
+          canvas.updatePixels();
+        }
+        else if(p.mousePressed && p.mouseButton == RIGHT) {
+          canvas.loadPixels();
+          canvas.pixels[pixdex] = color(0, 0);
+          canvas.updatePixels();
+        }
+      } catch(Exception e) {
+        print(",");
       }
     }
     
@@ -70,7 +79,6 @@ class GrainCanvas extends Canvas {
              } 
              catch(Exception e){
                println(".");
-               //e.printStackTrace();
              }
            }
          }
