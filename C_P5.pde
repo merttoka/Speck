@@ -18,7 +18,7 @@ void initControls() {
   cp5.addCanvas(gc);
   
   // Setup font systemwide
-  PFont font = createFont("Ubuntu Mono Bold", 12);
+  PFont font = createFont("Courier New", 11);
   cp5.setFont(font);
   textFont(font);
   textAlign(CENTER, CENTER);
@@ -39,13 +39,13 @@ void initListWindow() {
   grainListGroup.disableCollapse();
   grainListGroup.getCaptionLabel().setVisible(false);
   
-  cp5.addScrollableList("grains_dropdown")
-     .setPosition(10, 10)
-     .setSize(int(width*0.1 - marginx)-20, height - 2*marginy - 20)
-     .setBarHeight(20)
-     .setItemHeight(20)
-     .setType(ControlP5.LIST)
-     .setGroup(grainListGroup);
+  ScrollableList sl = cp5.addScrollableList("grains_dropdown")
+                       .setPosition(10, 10)
+                       .setSize(int(width*0.1 - marginx)-20, height - 2*marginy - 20)
+                       .setBarHeight(20)
+                       .setItemHeight(20)
+                       .setType(ControlP5.LIST)
+                       .setGroup(grainListGroup);
 }
 
 void initEditWindow() {

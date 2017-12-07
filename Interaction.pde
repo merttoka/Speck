@@ -52,14 +52,15 @@ void saveGrain() {
       maxAmp = max(grn.samples[i], maxAmp);
       minAmp = min(grn.samples[i], minAmp);
     }  
-    println(minAmp, maxAmp);
+    
     float mm = -9999;
     for( int i = 0; i < grn.samples.length; i++ )
     { 
       grn.samples[i] *= 1.0/maxAmp;
       mm = max(grn.samples[i], mm);
     }  
-    println(mm);
+    
+    
     // create triggerable Sampler
     grn.createGrainSample();
     grains.add(grn);
@@ -71,6 +72,12 @@ void saveGrain() {
     }
     ScrollableList sl = (ScrollableList)cp5.getController("grains_dropdown");
     sl.setItems(ids);
+    
+    //for (int i = 0; i < sl.getItems().size(); i++) {
+    //  CColor c = new CColor();
+    //  c.setBackground(grn.grainColor);
+    //  sl.getItem(i).put("color", c);
+    //}
   }
 }
 
@@ -100,6 +107,10 @@ void keyPressed() {
   if(key == 'p' && selectedGrain != null) {
     selectedGrain.sample.setSampleRate(selectedGrain.sampleRate * cmap(mouseY, 0, width, 0.1 , 2));
     selectedGrain.sample.trigger();
+  }
+  
+  if(key == 's') {
+    canvas.save("images/export"+millis()+".jpg");
   }
   
   // DEBUG KEY

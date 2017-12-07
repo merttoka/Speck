@@ -3,7 +3,8 @@ float deltaTime = 0;
 
 void setup() {
   //size(800, 500);
-  fullScreen(1);
+  fullScreen(2);
+  
   
   frameRate(30);
   noSmooth();

@@ -6,10 +6,11 @@ float maxTime = 5000;
 boolean isPlaying = false;
 int current_timestamp = -1;
 
+PImage canvas;
+PImage im;
+
 class GrainCanvas extends Canvas {
   public float x, y, w, h;
-  
-  private PImage canvas;
   
   int mx, my;
   
@@ -23,6 +24,28 @@ class GrainCanvas extends Canvas {
     
     return ys;
   }
+  void loadImageInCanvas(String filename, boolean normalizeColors) {
+    im = loadImage("images/"+filename);
+    im.resize(int(w/scalex), int(h/scaley));
+    
+    if(normalizeColors) {
+      colorMode(HSB, maxGrains, 100, 100);
+      im.loadPixels();
+      for (int i = 0; i < im.pixels.length; i++) {
+        color c = im.pixels[i];
+        im.pixels[i] = color(0,0);
+        if(alpha(c) > 5) {
+          int hue = hue(c) % 1.0f > 0.5 ? ceil(hue(c)) : floor(hue(c));
+          im.pixels[i] = color(hue, 100, 100);
+        }
+      }
+      im.updatePixels();
+      colorMode(RGB, 255, 255, 255);
+    }
+    
+    canvas.blend(im,0,0,im.width,im.height, 0,0,canvas.width,canvas.height, REPLACE);
+  }
+  
   public GrainCanvas(float x, float y, float w, float h) {
     this.x = x;
     this.y = y;
@@ -30,6 +53,9 @@ class GrainCanvas extends Canvas {
     this.h = h;
     
     canvas = createImage(int(w/scalex), int(h/scaley), ARGB);
+    
+    loadImageInCanvas("sign.png", true);
+    //loadImageInCanvas("containerized_deployments.jpeg", false);
   }
   
   public void setup(PGraphics pg) {}  
@@ -68,20 +94,19 @@ class GrainCanvas extends Canvas {
          current_timestamp = timestamp_location;
          
          color[] arr = getPixelsAt(current_timestamp);
+         colorMode(HSB, maxGrains, 100, 100);
          for(int i = 0; i < arr.length; i++) {
            if(arr[i] != 0) {
-             try{
-               int id = int(map(hue(arr[i]), 0, 255, 0, maxGrains));
+             int id = int(hue(arr[i]));
+             if( id < grains.size()){
                Grain g = grains.get(id);
                
                g.sample.setSampleRate(g.sampleRate * cmap(i, 0, arr.length, 0.1 , 2));
                g.sample.trigger();
-             } 
-             catch(Exception e){
-               println(".");
              }
            }
          }
+         colorMode(RGB, 255, 255, 255);
       }
         
       if(time > maxTime) { 
@@ -120,7 +145,7 @@ class GrainCanvas extends Canvas {
     
     // draw timer
     float _x = x + map(time, 0, maxTime, 0, w);
-    pg.stroke(255, isPlaying? 150 : 50);
+    pg.stroke(255, isPlaying ? 150 : 50);
     pg.line(_x, y, _x, y+h);
   }
 }
