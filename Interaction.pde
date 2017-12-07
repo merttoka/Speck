@@ -109,6 +109,18 @@ void keyPressed() {
     selectedGrain.sample.trigger();
   }
   
+  if(key == 'c') {
+    canvas.loadPixels();
+    for (int i = 0; i < canvas.pixels.length; i++) {
+      canvas.pixels[i] = color(0,0);
+    }
+    canvas.updatePixels();
+  }
+  
+  if(key == 'i') {
+    canvas.blend(im,0,0,im.width,im.height, 0,0,canvas.width,canvas.height, REPLACE);
+  }
+  
   if(key == 's') {
     canvas.save("images/export"+millis()+".jpg");
   }

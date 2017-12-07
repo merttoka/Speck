@@ -3,13 +3,9 @@ import ddf.minim.ugens.*;
 import javax.sound.sampled.AudioFormat;
 
 Minim minim;
-//AudioPlayer filePlayer;
-//AudioSample file;
-
 MultiChannelBuffer file;
 AudioOutput output;
 Sampler sampler;
-
 float[] envelope = new float[32];
 
 ArrayList<Grain> grains = new ArrayList<Grain>();
@@ -19,7 +15,8 @@ void initAudio () {
   
   output = minim.getLineOut();
   
-  float sr = loadSample("0.aif");
+  // return sample rate
+  loadSample("0.aif");
   
   updateSampleName();
   updateSampleDuration();
@@ -28,7 +25,6 @@ void initAudio () {
 }
 
 float loadSample(String sample) {
-  
   file = new MultiChannelBuffer( 1024, 1 );
   
   selectedSample = sample;

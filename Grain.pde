@@ -27,11 +27,9 @@ class Grain {
     buffer.setBufferSize(samples.length);
     buffer.setChannel(0, samples);
     
-    println("Grain created: ", buffer.getBufferSize());
-    
     this.sample = new Sampler( buffer, sampleRate, 1 );
     this.sample.patch(output);
     
-    println(sample.sampleRate());
+    println("Grain created: ", buffer.getBufferSize()/sample.sampleRate());
   }
 };

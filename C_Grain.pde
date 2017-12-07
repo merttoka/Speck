@@ -42,8 +42,6 @@ class GrainCanvas extends Canvas {
       im.updatePixels();
       colorMode(RGB, 255, 255, 255);
     }
-    
-    canvas.blend(im,0,0,im.width,im.height, 0,0,canvas.width,canvas.height, REPLACE);
   }
   
   public GrainCanvas(float x, float y, float w, float h) {
@@ -54,8 +52,8 @@ class GrainCanvas extends Canvas {
     
     canvas = createImage(int(w/scalex), int(h/scaley), ARGB);
     
-    loadImageInCanvas("sign.png", true);
-    //loadImageInCanvas("containerized_deployments.jpeg", false);
+    //loadImageInCanvas("sign.png", true);
+    loadImageInCanvas("containerized_deployments.png", true);
   }
   
   public void setup(PGraphics pg) {}  
@@ -101,6 +99,7 @@ class GrainCanvas extends Canvas {
              if( id < grains.size()){
                Grain g = grains.get(id);
                
+               // TODO: Phase Vocoder
                g.sample.setSampleRate(g.sampleRate * cmap(i, 0, arr.length, 0.1 , 2));
                g.sample.trigger();
              }
