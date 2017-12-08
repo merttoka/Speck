@@ -13,6 +13,8 @@ class Grain {
   Sampler sample;
   MultiChannelBuffer buffer;
   
+  Gain gain;
+  
   Grain(int l, float sr) {
     this.uid = grains.size();
     
@@ -21,6 +23,7 @@ class Grain {
     this.samples = new float[l];  
     
     this.buffer = new MultiChannelBuffer( l, 1 );
+    this.gain = new Gain(0.f);
   }
   
   void createGrainSample() {
@@ -28,7 +31,7 @@ class Grain {
     buffer.setChannel(0, samples);
     
     this.sample = new Sampler( buffer, sampleRate, 1 );
-    this.sample.patch(output);
+    this.sample.patch(gain).patch(output);
     
     println("Grain created: ", buffer.getBufferSize()/sample.sampleRate());
   }

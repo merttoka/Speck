@@ -35,7 +35,10 @@ void saveGrain() {
     
     Grain grn = new Grain(abs(pos2-pos1), sampler.sampleRate());
     grn.fileName = selectedSample;
-    grn.samples = subset(samples, min(pos1, pos2), abs(pos2-pos1));
+    if(pos1 < pos2)
+      grn.samples = subset(samples, pos1, pos2-pos1);
+    else if(pos1 > pos2)
+      grn.samples = reverse(subset(samples, pos2, pos1-pos2));
     
     colorMode(HSB, maxGrains, 100, 100);
     grn.grainColor = color(grn.uid, 100, 100);
@@ -44,21 +47,14 @@ void saveGrain() {
     selectedGrain = grn;
     
     // apply envelope
-    float maxAmp = -999, minAmp = 999;
+    float maxAmp = -1;
     for( int i = 0; i < grn.samples.length; i++ )
     { 
       float e1 = getFloatIndex(envelope, cmap(i, 0, samples.length, 0, envelope.length));
       grn.samples[i] *= e1;
       maxAmp = max(grn.samples[i], maxAmp);
-      minAmp = min(grn.samples[i], minAmp);
     }  
-    
-    float mm = -9999;
-    for( int i = 0; i < grn.samples.length; i++ )
-    { 
-      grn.samples[i] *= 1.0/maxAmp;
-      mm = max(grn.samples[i], mm);
-    }  
+    for( int i = 0; i < grn.samples.length; i++ ) grn.samples[i] *= 1.0/maxAmp;
     
     
     // create triggerable Sampler
@@ -102,6 +98,15 @@ void samples_dropdown(int n) {
 void keyPressed() {
   if(key == ' ') {
     isPlaying = !isPlaying;
+  }
+  if(keyCode == LEFT) {
+    time -= isPlaying ? 2*deltaTime : deltaTime;
+    time = constrain(time, 0, maxTime);
+    current_timestamp = int(map(time, 0, maxTime, 0, canvas.width));
+  }
+  else if(keyCode == RIGHT) {
+    time += deltaTime;
+    time = constrain(time, 0, maxTime);
   }
   
   if(key == 'p' && selectedGrain != null) {

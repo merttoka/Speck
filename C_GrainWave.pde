@@ -32,13 +32,19 @@ class GrainWaveformCanvas extends Canvas {
       float[] samples = file.getChannel(0);
       int pos1 = (int)cmap(selection[0], x, x+w, 0, samples.length);
       int pos2 = (int)cmap(selection[1], x, x+w, 0, samples.length);
-      float[] grain_samples = subset(samples, min(pos1, pos2), abs(pos2-pos1));
+      float[] grain_samples = {};
+      if(pos1 < pos2)
+        grain_samples = subset(samples, pos1, pos2-pos1);
+      else if(pos1 > pos2)
+        grain_samples = reverse(subset(samples, pos2, pos1-pos2));
       
+      float min = min(grain_samples);
+      float max = max(grain_samples);
       wave.beginDraw();
       wave.background(0,0);
       for( int i = 0; i < grain_samples.length - 1; i++ )
       {
-        // find the x position of each buffer value
+        // find the x coordinate of each buffer value
         float x1  = cmap( i, 0, grain_samples.length, x, x+w );
         float x2  = cmap( i+1, 0, grain_samples.length, x, x+w );
         float _y  = y + h*0.5;
@@ -46,8 +52,11 @@ class GrainWaveformCanvas extends Canvas {
         float e1 = getFloatIndex(envelope, cmap(i, 0, grain_samples.length, 0, envelope.length));
         float e2 = getFloatIndex(envelope, cmap(i+1, 0, grain_samples.length, 0, envelope.length));
       
+        float offset1 = map(grain_samples[i  ]*e1, min, max, -h/2, h/2);
+        float offset2 = map(grain_samples[i+1]*e2, min, max, -h/2, h/2); 
+      
         wave.stroke(255);
-        wave.line( x1, _y + grain_samples[i]*e1*h, x2, _y + grain_samples[i+1]*e2*h);
+        wave.line( x1, _y + offset1, x2, _y + offset2);
       }  
       wave.endDraw();
       
