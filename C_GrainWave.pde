@@ -37,7 +37,9 @@ class GrainWaveformCanvas extends Canvas {
         grain_samples = subset(samples, pos1, pos2-pos1);
       else if(pos1 > pos2)
         grain_samples = reverse(subset(samples, pos2, pos1-pos2));
-      
+      else
+        return;
+        
       float min = min(grain_samples);
       float max = max(grain_samples);
       wave.beginDraw();

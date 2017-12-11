@@ -1,8 +1,12 @@
-float scalex = 25;
-float scaley = 40;
+PVector resolution = new PVector(60, 24);
+
+//////////////////////////////////
+float DEBUG_TIME = 0; 
+float[] DEBUG_TIME_ARRAY =  new float[(int)resolution.x];
+//////////////////////////////////
 
 float time = 0;
-float maxTime = 5000;
+float maxTime = 10000;
 boolean isPlaying = false;
 int current_timestamp = -1;
 
@@ -26,7 +30,7 @@ class GrainCanvas extends Canvas {
   }
   void loadImageInCanvas(String filename, boolean normalizeColors) {
     im = loadImage("images/"+filename);
-    im.resize(int(w/scalex), int(h/scaley));
+    im.resize(int(resolution.x), int(resolution.y));
     
     if(normalizeColors) {
       colorMode(HSB, maxGrains, 100, 100);
@@ -50,7 +54,7 @@ class GrainCanvas extends Canvas {
     this.w = w;
     this.h = h;
     
-    canvas = createImage(int(w/scalex), int(h/scaley), ARGB);
+    canvas = createImage(int(resolution.x), int(resolution.y), ARGB);
     
     //loadImageInCanvas("sign.png", true);
     loadImageInCanvas("containerized_deployments.png", true);
@@ -67,7 +71,7 @@ class GrainCanvas extends Canvas {
     
     if (mx >= x && mx < x+w && my >= y && my < y+h){
       try {
-        int pixdex = int((my-marginy)/scaley) * canvas.width + int((mx-marginx)/scalex);
+        int pixdex = int((my-marginy)/(h/resolution.y)) * canvas.width + int((mx-marginx)/(w/resolution.x));
         if(p.mousePressed && p.mouseButton == LEFT && selectedGrain != null) {
           canvas.loadPixels();
           canvas.pixels[pixdex] = selectedGrain.grainColor;
@@ -91,6 +95,16 @@ class GrainCanvas extends Canvas {
       if(timestamp_location > current_timestamp) {
          current_timestamp = timestamp_location;
          
+         
+         ///////D_TIMING////////////
+         try{
+           println(DEBUG_TIME +" ms/"+(maxTime/resolution.x)+" ms");
+           DEBUG_TIME_ARRAY[current_timestamp] = DEBUG_TIME;
+           DEBUG_TIME = 0;
+           if(current_timestamp == resolution.x - 1) DEBUG_TIME_ARRAY = new float[(int)resolution.x];
+         } catch(Exception e) {}
+         ///////////////////////////
+         
          color[] arr = getPixelsAt(current_timestamp);
          colorMode(HSB, maxGrains, 100, 100);
          for(int i = 0; i < arr.length; i++) {
@@ -107,6 +121,11 @@ class GrainCanvas extends Canvas {
          }
          colorMode(RGB, 255, 255, 255);
       }
+      ///////D_TIMING////////////
+      else {
+        DEBUG_TIME += deltaTime;
+      }
+      ///////////////////////////
         
       if(time > maxTime) { 
         time -= maxTime; 
@@ -121,22 +140,22 @@ class GrainCanvas extends Canvas {
     pg.rect(x, y, w, h);
     
     // draw the grid
-    float _cw = canvas.width;
-    float _ch = canvas.height;
+    //float _cw = canvas.width;
+    //float _ch = canvas.height;
     pg.stroke(255, 20);
-    for(int i = 0; i < _cw; i++) {
-      float _x = x + w/_cw*i;
+    for(int i = 0; i < resolution.x; i++) {
+      float _x = x + w/resolution.x*i;
       pg.line(_x, y, _x, y+h);
     }
-    for(int j = 0; j < _ch; j++) {
-      if(j < _ch*0.5)
-        pg.stroke(255, map(j, 0, _ch*0.5, 2, 15));
-      else if (j == _ch*0.5)
+    for(int j = 0; j < resolution.y; j++) {
+      if(j < resolution.y*0.5)
+        pg.stroke(255, map(j, 0, resolution.y*0.5, 2, 15));
+      else if (j == resolution.y*0.5)
         pg.stroke(255, 50);
       else
-        pg.stroke(255, map(j, _ch*0.5, _ch, 15, 2));
+        pg.stroke(255, map(j, resolution.y*0.5, resolution.y, 15, 2));
         
-      float _y = y + h/_ch*j;
+      float _y = y + h/resolution.y*j;
       pg.line(x, _y, x+w, _y);
     }
     
@@ -146,5 +165,19 @@ class GrainCanvas extends Canvas {
     float _x = x + map(time, 0, maxTime, 0, w);
     pg.stroke(255, isPlaying ? 150 : 50);
     pg.line(_x, y, _x, y+h);
+    
+    ////////////////////////////////////////
+    //pg.fill(0);
+    //pg.rect(x,y,w*0.2, h*0.1);
+    //pg.noStroke();
+    //pg.fill(200);
+    //for(int i=0; i < current_timestamp;i++) {
+    //  float _h = cmap(DEBUG_TIME_ARRAY[i], min(DEBUG_TIME_ARRAY), max(DEBUG_TIME_ARRAY), 0, h*0.1);
+    //  pg.rect(x + i*w*0.2/DEBUG_TIME_ARRAY.length,
+    //          y + h*0.1 - _h, 
+    //          w*0.2/DEBUG_TIME_ARRAY.length, 
+    //          _h);
+    //}
+    ////////////////////////////////////////
   }
 }

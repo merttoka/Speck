@@ -68,12 +68,6 @@ void saveGrain() {
     }
     ScrollableList sl = (ScrollableList)cp5.getController("grains_dropdown");
     sl.setItems(ids);
-    
-    //for (int i = 0; i < sl.getItems().size(); i++) {
-    //  CColor c = new CColor();
-    //  c.setBackground(grn.grainColor);
-    //  sl.getItem(i).put("color", c);
-    //}
   }
 }
 
@@ -95,44 +89,52 @@ void samples_dropdown(int n) {
   isDrawGrainWave = true;
 }
 
-void keyPressed() {
+void keyPressed(KeyEvent e) {
+  // toogle playing 
   if(key == ' ') {
     isPlaying = !isPlaying;
   }
+  // clears canvas 
+  else if(key == 'c') {
+    canvas.loadPixels();
+    for (int i = 0; i < canvas.pixels.length; i++) canvas.pixels[i] = color(0,0);
+    canvas.updatePixels();
+  }
+  // loads image on canvas
+  else if(key == 'i') {
+    canvas.blend(im,0,0,im.width,im.height, 0,0,canvas.width,canvas.height, REPLACE);
+  }
+  // saves current canvas
+  else if(key == 's') {
+    canvas.save("images/export"+millis()+".jpg");
+  }
+  // plays currently selected grain (pitch shift on Mouse Y)
+  else if(key >= '0' && key <= '9') {
+    int i = int(key)-48;
+    if(i < grains.size()) {
+      Grain g = grains.get(i);
+      //g.sample.setSampleRate(selectedGrain.sampleRate * cmap(mouseY, 0, width, 0.1 , 2));
+      g.sample.trigger();
+    }
+  }
+  
+  // Scrubbing right and left 
   if(keyCode == LEFT) {
-    time -= isPlaying ? 2*deltaTime : deltaTime;
+    int coeff = e.isShiftDown() ? 2 : 1;
+    coeff *= isPlaying ? 2 : 1;
+    time -= coeff*deltaTime;
     time = constrain(time, 0, maxTime);
     current_timestamp = int(map(time, 0, maxTime, 0, canvas.width));
   }
   else if(keyCode == RIGHT) {
-    time += deltaTime;
+    int coeff = e.isShiftDown() ? 2 : 1;
+    time += coeff*deltaTime;
     time = constrain(time, 0, maxTime);
-  }
-  
-  if(key == 'p' && selectedGrain != null) {
-    selectedGrain.sample.setSampleRate(selectedGrain.sampleRate * cmap(mouseY, 0, width, 0.1 , 2));
-    selectedGrain.sample.trigger();
-  }
-  
-  if(key == 'c') {
-    canvas.loadPixels();
-    for (int i = 0; i < canvas.pixels.length; i++) {
-      canvas.pixels[i] = color(0,0);
-    }
-    canvas.updatePixels();
-  }
-  
-  if(key == 'i') {
-    canvas.blend(im,0,0,im.width,im.height, 0,0,canvas.width,canvas.height, REPLACE);
-  }
-  
-  if(key == 's') {
-    canvas.save("images/export"+millis()+".jpg");
   }
   
   // DEBUG KEY
   if(key == 'e') {
-    sampler.setSampleRate(44100*cmap(mouseX, 0, width, 0.1 , 2));
-    sampler.trigger();
+    //sampler.setSampleRate(44100*cmap(mouseX, 0, width, 0.1 , 2));
+    //sampler.trigger();
   }
 }
