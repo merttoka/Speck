@@ -1,7 +1,7 @@
 # Speck
 MAT240C Audio Programming Final Project
 
-![ss](docs\ss.png)
+![ss](docs/ss.png)
 
 
 
@@ -25,7 +25,7 @@ MAT240C Audio Programming Final Project
 
 ### Usage 
 
-<img src="docs\GIF2.gif" alt="Drawing" style="width: 380px;"/> <img src="docs\GIF.gif" alt="Drawing" style="width: 150px;"/>
+<img src="docs/GIF2.gif" alt=".." style="width: 380px;"/> <img src="docs/GIF.gif" alt=".." style="width: 150px;"/>
 
 
 
