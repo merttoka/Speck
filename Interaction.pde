@@ -110,12 +110,7 @@ void keyPressed(KeyEvent e) {
   }
   // plays currently selected grain (pitch shift on Mouse Y)
   else if(key >= '0' && key <= '9') {
-    int i = int(key)-48;
-    if(i < grains.size()) {
-      Grain g = grains.get(i);
-      //g.sample.setSampleRate(selectedGrain.sampleRate * cmap(mouseY, 0, width, 0.1 , 2));
-      g.sample.trigger();
-    }
+    if ( int(key)-48 < grains.size() ) grains.get(int(key)-48).sample.trigger();
   }
   
   // Scrubbing right and left 
@@ -130,11 +125,5 @@ void keyPressed(KeyEvent e) {
     int coeff = e.isShiftDown() ? 2 : 1;
     time += coeff*deltaTime;
     time = constrain(time, 0, maxTime);
-  }
-  
-  // DEBUG KEY
-  if(key == 'e') {
-    //sampler.setSampleRate(44100*cmap(mouseX, 0, width, 0.1 , 2));
-    //sampler.trigger();
   }
 }

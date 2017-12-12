@@ -22,7 +22,6 @@ void initControls() {
   cp5.setFont(font);
   textFont(font);
   textAlign(CENTER, CENTER);
-  //textSize(8);
   
   // Editors
   initListWindow();

@@ -15,7 +15,7 @@ void initAudio () {
   
   output = minim.getLineOut();
   
-  // return sample rate
+  // returns sample rate
   loadSample("0.aif");
   
   updateSampleName();

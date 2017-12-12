@@ -1,17 +1,15 @@
-PVector resolution = new PVector(60, 24);
-
 //////////////////////////////////
 float DEBUG_TIME = 0; 
 float[] DEBUG_TIME_ARRAY =  new float[(int)resolution.x];
 //////////////////////////////////
 
-float time = 0;
-float maxTime = 10000;
 boolean isPlaying = false;
 int current_timestamp = -1;
 
 PImage canvas;
 PImage im;
+
+String imageFileName = "";
 
 class GrainCanvas extends Canvas {
   public float x, y, w, h;
@@ -57,7 +55,7 @@ class GrainCanvas extends Canvas {
     canvas = createImage(int(resolution.x), int(resolution.y), ARGB);
     
     //loadImageInCanvas("sign.png", true);
-    loadImageInCanvas("containerized_deployments.png", true);
+    loadImageInCanvas(imageFileName, true);
   }
   
   public void setup(PGraphics pg) {}  
@@ -113,7 +111,6 @@ class GrainCanvas extends Canvas {
              if( id < grains.size()){
                Grain g = grains.get(id);
                
-               // TODO: Phase Vocoder
                g.sample.setSampleRate(g.sampleRate * cmap(i, 0, arr.length, 0.1 , 2));
                g.sample.trigger();
              }
@@ -140,8 +137,6 @@ class GrainCanvas extends Canvas {
     pg.rect(x, y, w, h);
     
     // draw the grid
-    //float _cw = canvas.width;
-    //float _ch = canvas.height;
     pg.stroke(255, 20);
     for(int i = 0; i < resolution.x; i++) {
       float _x = x + w/resolution.x*i;
