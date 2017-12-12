@@ -47,7 +47,6 @@ MAT240C Audio Programming Final Project
 - You can copy sample files to `speck/samples/` directory to populate the samples list.
 
 - The *resolution* of canvas and *total time* of canvas can be modified with `resolution` (*canvas matrix dimension*) and `maxTime` (*milliseconds*) variables at the top of `speck.pde` 
-- ​
 
 ### TODO:
 - [x] Assign keyboard numbers to play grains
