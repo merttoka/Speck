@@ -1,7 +1,7 @@
 # Speck
 MAT240C Audio Programming Final Project
 
-![ss](C:\Users\Mert\Dropbox\Desktop\MAT240C\final_project\speck\docs\ss.png)
+![ss](docs\ss.png)
 
 
 
@@ -25,7 +25,7 @@ MAT240C Audio Programming Final Project
 
 ### Usage 
 
-<img src="C:\Users\Mert\Dropbox\Desktop\MAT240C\final_project\speck\docs\GIF2.gif" alt="Drawing" style="width: 380px;"/> <img src="C:\Users\Mert\Dropbox\Desktop\MAT240C\final_project\speck\docs\GIF.gif" alt="Drawing" style="width: 150px;"/>
+<img src="docs\GIF2.gif" alt="Drawing" style="width: 380px;"/> <img src="docs\GIF.gif" alt="Drawing" style="width: 150px;"/>
 
 
 
@@ -47,8 +47,7 @@ MAT240C Audio Programming Final Project
 - You can copy sample files to `speck/samples/` directory to populate the samples list.
 
 - The *resolution* of canvas and *total time* of canvas can be modified with `resolution` (*canvas matrix dimension*) and `maxTime` (*milliseconds*) variables at the top of `speck.pde` 
-
-  ​
+- ​
 
 ### TODO:
 - [x] Assign keyboard numbers to play grains
