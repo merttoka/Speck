@@ -1,8 +1,10 @@
 # Speck
-MAT240C Audio Programming Final Project
+**MAT240C *Audio Programming* - Final Project**
+
+
+*Speck* is a grain sequencer inspired by electronic music notation, granular and image syntheses. Grains can be created by chopping samples and applying an arbitrary envelope. They can be placed onto the canvas by drawing with mouse, and when triggered, the canvas translates spatial pixels into note-like structures whose pitch varies based on the vertical location of the note. 
 
 ![ss](docs/ss.png)
-
 
 
 ### Install and Run
@@ -25,9 +27,7 @@ MAT240C Audio Programming Final Project
 
 ### Usage 
 
-<img src="docs/GIF2.gif" alt=".." style="width: 380px;"/> <img src="docs/GIF.gif" alt=".." style="width: 150px;"/>
-
-
+<img src="docs/GIF2.gif" alt=".." width="520"> <img src="docs/GIF.gif" alt="..." width="200">
 
 
 | Key                                      | Interaction                              |
