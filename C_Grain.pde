@@ -119,46 +119,6 @@ class GrainCanvas extends Canvas {
         current_timestamp = canvas.width + 1 ;
       }
     }
-    
-    
-    //if (isPlaying) {
-    //  time += deltaTime;
-      
-    //  // trig samples only on integer time
-    //  int timestamp_location = int(map(time, 0, maxTime, 0, canvas.width));
-    //  if(timestamp_location > current_timestamp) {
-    //     current_timestamp = timestamp_location;
-         
-    //     ///////D_TIMING////////////
-    //     //try{
-    //     //  println(DEBUG_TIME +" ms/"+(maxTime/resolution.x)+" ms");
-    //     //  DEBUG_TIME_ARRAY[current_timestamp] = DEBUG_TIME;
-    //     //  DEBUG_TIME = 0;
-    //     //  if(current_timestamp == resolution.x - 1) DEBUG_TIME_ARRAY = new float[(int)resolution.x];
-    //     //} catch(Exception e) {}
-    //     ///////////////////////////
-         
-    //     color[] arr = getPixelsAt(current_timestamp);
-    //     colorMode(HSB, maxGrains, 100, 100);
-    //     for(int i = 0; i < arr.length; i++) {
-    //       if(arr[i] != 0) {
-    //         int id = int(hue(arr[i]));
-    //         if( id < grains.size()){
-    //           Grain g = grains.get(id);
-               
-    //           g.sample.setSampleRate(g.sampleRate * cmap(i, 0, arr.length, 0.1 , 2));
-    //           g.sample.trigger();
-    //         }
-    //       }
-    //     }
-    //     colorMode(RGB, 255, 255, 255);
-    //  }
-        
-    //  if(time > maxTime) { 
-    //    time -= maxTime; 
-    //    current_timestamp = -1;
-    //  }
-    //}
   }
 
   public void draw(PGraphics pg) {
