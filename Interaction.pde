@@ -125,5 +125,9 @@ void keyPressed(KeyEvent e) {
     int coeff = e.isShiftDown() ? 2 : 1;
     time += coeff*deltaTime;
     time = constrain(time, 0, maxTime);
+  } else if (keyCode == UP) {
+    timeCoefficient += 0.2;  
+  } else if (keyCode == DOWN) {
+    timeCoefficient -= 0.2;
   }
 }

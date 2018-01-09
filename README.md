@@ -1,8 +1,6 @@
 # Speck
 **MAT240C *Audio Programming* - Final Project**
 
-
-
 *Speck* is a grain sequencer inspired by electronic music notation, granular and image syntheses. Grains can be created by chopping samples and applying an arbitrary envelope. They can be placed onto the canvas by drawing with mouse, and when triggered, the canvas translates spatial pixels into note-like structures whose pitch varies based on the vertical location of the note. 
 
 ![ss](docs/ss.png)
@@ -29,9 +27,7 @@
 
 ### Usage 
 
-<img src="docs/GIF2.gif" alt=".." style="width: 380px;"/> <img src="docs/GIF.gif" alt=".." style="width: 150px;"/>
-
-
+<img src="docs/GIF2.gif" alt=".." width="520"> <img src="docs/GIF.gif" alt="..." width="200">
 
 
 | Key                                      | Interaction                              |
@@ -43,6 +39,7 @@
 | `LEFT CLICK` on *canvas*                 | Places selected grain on the cell of canvas |
 | `RIGHT CLICK` on *canvas*                | Removes item from the cell of canvas     |
 | ` SPACE`                                 | Start / stop timer on canvas             |
+| `UP`/`DOWN`                              | Increment / decrement playback speed     |
 | `i`                                      | Load an image into canvas (image path is in `void setup` function) |
 | `s`                                      | Save canvas as an image file             |
 | `c`                                      | Clear canvas                             |
@@ -52,15 +49,13 @@
 
 - The *resolution* of canvas and *total time* of canvas can be modified with `resolution` (*canvas matrix dimension*) and `maxTime` (*milliseconds*) variables at the top of `speck.pde` 
 
-  ​
-
 ### TODO:
 - [x] Assign keyboard numbers to play grains
 - [x] Draw normalized grain wave 
 - [x] Reverse sample playback on selection
+- [x] Adjustable playback speed
 - [ ] Image selector
 - [ ] Save grains and canvas on quit
 - [ ] Editing Grains (delete, manipulate)
-- [ ] Grain selector list colors
-- [ ] Labels under the canvas
+- [ ] Coloring the grain selection dropdown items
 - [ ] Interaction improvements

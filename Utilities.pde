@@ -6,6 +6,9 @@ static float log10 (float x) {
 static float cmap(float v, float x1, float y1, float x2, float y2) {
   return constrain(map(v, x1, y1, x2, y2), min(x2, y2), max(x2, y2));
 }
+static int icmap(float v, float x1, float y1, float x2, float y2) {
+  return int(constrain(map(v, x1, y1, x2, y2), min(x2, y2), max(x2, y2)));
+}
 
 // Audio functions
 static public float mtof(float m) {

@@ -1,6 +1,7 @@
 float prevTime = millis();
 float time = 0;
 float deltaTime = 0;
+float timeCoefficient = 1;
 
 PVector resolution = new PVector(60, 24);
 float maxTime = 10000;
