@@ -12,7 +12,7 @@ void setup() {
   frameRate(30);
   noSmooth();
   
-  imageFileName = "containerized_deployments.png";
+  imageFileName = "sign.png";
   
   initControls();
   initAudio();
@@ -21,7 +21,7 @@ void setup() {
 void draw() {
   background(50);
   deltaTime = millis() - prevTime;
- 
+  
   // App drawing
  
   prevTime = millis();

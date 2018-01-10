@@ -1,8 +1,3 @@
-//////////////////////////////////
-float DEBUG_TIME = 0; 
-float[] DEBUG_TIME_ARRAY =  new float[(int)resolution.x];
-//////////////////////////////////
-
 boolean isPlaying = false;
 int current_timestamp = -1;
 
@@ -10,6 +5,26 @@ PImage canvas;
 PImage im;
 
 String imageFileName = "";
+
+void loadImageInCanvas(String filename, boolean normalizeColors) {
+  im = loadImage("images/"+filename);
+  im.resize(int(resolution.x), int(resolution.y));
+  
+  if(normalizeColors) {
+    colorMode(HSB, maxGrains, 100, 100);
+    im.loadPixels();
+    for (int i = 0; i < im.pixels.length; i++) {
+      color c = im.pixels[i];
+      im.pixels[i] = color(0,0);
+      if(alpha(c) > 5 && brightness(c) > 20) {
+        int hue = hue(c) % 1.0f > 0.5 ? ceil(hue(c)) : floor(hue(c));
+        im.pixels[i] = color(hue, 100, 100);
+      }
+    }
+    im.updatePixels();
+    colorMode(RGB, 255, 255, 255);
+  }
+}
 
 class GrainCanvas extends Canvas {
   public float x, y, w, h;
@@ -25,25 +40,6 @@ class GrainCanvas extends Canvas {
     }
     
     return ys;
-  }
-  void loadImageInCanvas(String filename, boolean normalizeColors) {
-    im = loadImage("images/"+filename);
-    im.resize(int(resolution.x), int(resolution.y));
-    
-    if(normalizeColors) {
-      colorMode(HSB, maxGrains, 100, 100);
-      im.loadPixels();
-      for (int i = 0; i < im.pixels.length; i++) {
-        color c = im.pixels[i];
-        im.pixels[i] = color(0,0);
-        if(alpha(c) > 5) {
-          int hue = hue(c) % 1.0f > 0.5 ? ceil(hue(c)) : floor(hue(c));
-          im.pixels[i] = color(hue, 100, 100);
-        }
-      }
-      im.updatePixels();
-      colorMode(RGB, 255, 255, 255);
-    }
   }
   
   public GrainCanvas(float x, float y, float w, float h) {
@@ -102,7 +98,9 @@ class GrainCanvas extends Canvas {
              if( id < grains.size()){
                Grain g = grains.get(id);
                
-               g.sample.setSampleRate(g.sampleRate * cmap(i, 0, arr.length, 0.1 , 2));
+               float sr_coeff = i < arr.length/2 ? cmap(i, 0, arr.length/2, 0.5 , 1) : 
+                                                   cmap(i, arr.length/2, arr.length, 1, 2); 
+               g.sample.setSampleRate(g.sampleRate * sr_coeff);
                g.sample.trigger();
              }
            }
@@ -119,6 +117,9 @@ class GrainCanvas extends Canvas {
         current_timestamp = canvas.width + 1 ;
       }
     }
+    
+    cp5.get(Textlabel.class, "timerlabel").setText("Time: "+ nfc(time/1000.0, 3)+"s");
+    cp5.get(Textlabel.class, "speedlabel").setText("Speed: " + nfc(timeCoefficient, 2));
   }
 
   public void draw(PGraphics pg) {
@@ -150,19 +151,5 @@ class GrainCanvas extends Canvas {
     float _x = x + map(time, 0, maxTime, 0, w);
     pg.stroke(255, isPlaying ? 150 : 50);
     pg.line(_x, y, _x, y+h);
-    
-    ////////////////////////////////////////
-    //pg.fill(0);
-    //pg.rect(x,y,w*0.2, h*0.1);
-    //pg.noStroke();
-    //pg.fill(200);
-    //for(int i=0; i < current_timestamp;i++) {
-    //  float _h = cmap(DEBUG_TIME_ARRAY[i], min(DEBUG_TIME_ARRAY), max(DEBUG_TIME_ARRAY), 0, h*0.1);
-    //  pg.rect(x + i*w*0.2/DEBUG_TIME_ARRAY.length,
-    //          y + h*0.1 - _h, 
-    //          w*0.2/DEBUG_TIME_ARRAY.length, 
-    //          _h);
-    //}
-    ////////////////////////////////////////
   }
 }

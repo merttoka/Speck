@@ -54,7 +54,8 @@
 - [x] Draw normalized grain wave 
 - [x] Reverse sample playback on selection
 - [x] Adjustable playback speed
-- [ ] Image selector
+- [x] Image selector
+- [x] Labels
 - [ ] Save grains and canvas on quit
 - [ ] Editing Grains (delete, manipulate)
 - [ ] Coloring the grain selection dropdown items

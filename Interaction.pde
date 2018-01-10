@@ -89,6 +89,13 @@ void samples_dropdown(int n) {
   isDrawGrainWave = true;
 }
 
+// image dropdown listener
+void images_dropdown(int n) {
+  imageFileName = (String)cp5.get(ScrollableList.class, "images_dropdown").getItem(n).get("name");
+  println(imageFileName);
+  loadImageInCanvas(imageFileName, true);  
+}
+
 void keyPressed(KeyEvent e) {
   // toogle playing 
   if(key == ' ') {
@@ -107,6 +114,10 @@ void keyPressed(KeyEvent e) {
   // saves current canvas
   else if(key == 's') {
     canvas.save("images/export"+millis()+".jpg");
+    
+    String[] images = listFileNames(sketchPath()+"/images");
+    ScrollableList sl = cp5.get(ScrollableList.class, "images_dropdown");
+    sl.setItems(Arrays.asList(images));
   }
   // plays currently selected grain (pitch shift on Mouse Y)
   else if(key >= '0' && key <= '9') {

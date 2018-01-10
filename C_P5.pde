@@ -23,6 +23,29 @@ void initControls() {
   textFont(font);
   textAlign(CENTER, CENTER);
   
+  cp5.addTextlabel("timerlabel")
+    .setText(str(time))
+    .setPosition(marginx, marginy/2);
+  cp5.addTextlabel("speedlabel")
+    .setText(str(timeCoefficient))
+    .setPosition(marginx+100, marginy/2);
+  
+  float ticks = 10;
+  for (int i = 1; i <= ticks; i++) {
+    cp5.addTextlabel("timertick"+i)
+      .setText(nfc(i*(maxTime/ticks)/1000.0, 1)+"s")
+      .setPosition(marginx-15+i*(width*.65-2*marginx)/ticks, height-marginy+10);
+  }
+  float ticks_y = 6;
+  for (int i = 0; i <= ticks_y; i++) {
+    
+   float sr_coeff = i < ticks_y/2 ? cmap(i, 0, ticks_y/2, 2, 1) : 
+                                    cmap(i, ticks_y/2, ticks_y, 1, 0.5); 
+    cp5.addTextlabel("freqtick"+i)
+      .setText(nfc(sr_coeff, 1))
+      .setPosition(marginx-30, marginy-5+(height-2*marginy)/ticks_y*i);
+  }
+  
   // Editors
   initListWindow();
   initEditWindow();
@@ -38,11 +61,21 @@ void initListWindow() {
   grainListGroup.disableCollapse();
   grainListGroup.getCaptionLabel().setVisible(false);
   
-  ScrollableList sl = cp5.addScrollableList("grains_dropdown")
+  cp5.addScrollableList("grains_dropdown")
                        .setPosition(10, 10)
                        .setSize(int(width*0.1 - marginx)-20, height - 2*marginy - 20)
                        .setBarHeight(20)
                        .setItemHeight(20)
+                       .setType(ControlP5.LIST)
+                       .setGroup(grainListGroup);
+                       
+  String[] images = listFileNames(sketchPath()+"/images");
+  cp5.addScrollableList("images_dropdown")
+                       .setPosition(10, height-200-2*marginy - 10)
+                       .setSize(int(width*0.1 - marginx)-20, 200)
+                       .setBarHeight(20)
+                       .setItemHeight(20)
+                       .addItems(Arrays.asList(images))
                        .setType(ControlP5.LIST)
                        .setGroup(grainListGroup);
 }
