@@ -119,10 +119,14 @@ void keyPressed(KeyEvent e) {
     ScrollableList sl = cp5.get(ScrollableList.class, "images_dropdown");
     sl.setItems(Arrays.asList(images));
   }
-  // plays currently selected grain (pitch shift on Mouse Y)
+  // plays currently selected grain
   else if(key >= '0' && key <= '9') {
     if ( int(key)-48 < grains.size() ) grains.get(int(key)-48).sample.trigger();
   }
+  // removes corresponding element from grains list
+  //if(e.isAltDown() && key >= '0' && key <= '9') {
+  //  cp5.get(ScrollableList.class, "grains_dropdown").removeItem(str(key));
+  //}
   
   // Scrubbing right and left 
   if(keyCode == LEFT) {

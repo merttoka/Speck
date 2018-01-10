@@ -4,7 +4,7 @@ import java.util.*;
 ControlP5 cp5;
 Canvas gc, wc, ec, sc, gwc;
 
-int marginx = 30;
+int marginx = 50;
 int marginy = 45;
 
 // Initializes the GUI components
@@ -34,9 +34,9 @@ void initControls() {
   for (int i = 1; i <= ticks; i++) {
     cp5.addTextlabel("timertick"+i)
       .setText(nfc(i*(maxTime/ticks)/1000.0, 1)+"s")
-      .setPosition(marginx-15+i*(width*.65-2*marginx)/ticks, height-marginy+10);
+      .setPosition(marginx-20+i*(width*.65-2*marginx)/ticks, height-marginy+5);
   }
-  float ticks_y = 6;
+  float ticks_y = 8;
   for (int i = 0; i <= ticks_y; i++) {
     
    float sr_coeff = i < ticks_y/2 ? cmap(i, 0, ticks_y/2, 2, 1) : 
